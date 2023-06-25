@@ -1,0 +1,125 @@
+palette("#d0e5a3", "#104f61", "#2e916a")
+state {
+	group(#cafetera) {
+		let nodeRad = 0.07
+		let lineRad = 0.03
+		node(color: 2, point: <y: 3>)
+		var baseHeight = 4.4
+		let baseRad = 3
+		// Bottom bit
+		refract(center: <0, 0, 0>, count: 7) {
+			rotate(center: <0, 0, 0>, axis: <1, 0, 0>, angle: 8) {
+				translate(z: -1 * baseRad) {
+					let sliceRad = 1.13
+					let sliceMod = 0.3
+					node(#a, <x: -1 * sliceRad - sliceMod>, radius: nodeRad)
+					node(#b, <x: -1 * sliceRad, y: baseHeight>, radius: nodeRad)
+					node(#c, <x: sliceRad, y: baseHeight>, radius: nodeRad)
+					node(#d, <x: sliceRad + sliceMod>, radius: nodeRad)
+					line(points: [#a, #b], radius: lineRad)
+					line(points: [#c, #d], radius: lineRad)
+					spline(points: [#a, <-0.75, -0.2>, <0, -0.3>, <0.75, -0.2>, #d], radius: lineRad)
+					spline(points: [#b, <-0.75, baseHeight + 0.2>, <0, baseHeight + 0.3>, <0.75, baseHeight + 0.2>, #c], radius: lineRad)
+				}
+			}
+		}
+		drawCircle(center: [0, 0.15, 0], radius: baseRad * 1.03, count: 30, color: 1)
+		baseHeight = baseHeight + 0.125
+		// Middle bit
+		let midRad = 2.25
+		let bottom = drawCircle(center: [0, baseHeight + 0.5, 0], radius: midRad, count: 10, color: 1)
+		let top = drawCircle(center: [0, baseHeight + 1.5, 0], radius: midRad, count: 10, color: 1)
+		for i in 0 to bottom.length() - 1 {
+			line(points: [bottom[i], top[i]], radius: lineRad, color: 1)
+		}
+		// Top bit
+		let topRad = baseRad
+		let topStart = baseHeight + 2
+		let topHeight = baseHeight + 0.3
+		refract(center: <0, 0, 0>, count: 7) {
+			rotate(center: <0, topStart + topHeight / 2, 0>, axis: <1, 0, 0>, angle: -8) {
+				translate(z: -1 * topRad * 0.9) {
+					let sliceRad = 1.13
+					let sliceMod = 0.325
+					node(#e, <x: -1 * sliceRad, y: topStart>, radius: nodeRad)
+					node(#f, <x: -1 * sliceRad - sliceMod, y: topStart + topHeight>, radius: nodeRad)
+					node(#g, <x: sliceRad + sliceMod, y: topStart + topHeight>, radius: nodeRad)
+					node(#h, <x: sliceRad, y: topStart>, radius: nodeRad)
+					line(points: [#e, #f, #g, #h], radius: lineRad)
+					spline(points: [#e, <-0.75, topStart - 0.2>, <0, topStart - 0.3>, <0.75, topStart - 0.2>, #h], radius: lineRad)
+					node(#top, point: <y: topStart + topHeight + 0.3, z: topRad + 0.04>, radius: nodeRad)
+					line(points: [#f, #top, #g], radius: lineRad)
+				}
+			}
+		}
+		// Handle
+		let handleColor = 1
+		let handleNodeRad = 0.02
+		rotate(center: <0, 0, 0>, axis: <0, 1, 0>, angle: -17) {
+			translate(y: -0.8) {
+				refract(center: <0, 0, 0>, count: 2, angle: 8) {
+					node(#i, <x: topRad * 1.1, y: topStart + topHeight - 0.1, z: 0>, radius: handleNodeRad, color: handleColor)
+					node(#j, <x: 4.5, y: topStart + topHeight + 0.05, z: 0>, radius: handleNodeRad, color: handleColor)
+					node(#k, <x: 5.5, y: topStart + topHeight - 1, z: 0>, radius: handleNodeRad, color: handleColor)
+					node(#l, <x: 4.5, y: topStart + topHeight - 4, z: 0>, radius: handleNodeRad, color: handleColor)
+					node(#m, <x: 3.8, y: topStart + topHeight - 4, z: 0>, radius: handleNodeRad, color: handleColor)
+					node(#n, <x: 4.6, y: topStart + topHeight - 1.4, z: 0>, radius: handleNodeRad, color: handleColor)
+					node(#o, <x: 4.2, y: topStart + topHeight - 0.8, z: 0>, radius: handleNodeRad, color: handleColor)
+					node(#p, <x: 3.2, y: topStart + topHeight - 0.8, z: 0>, radius: handleNodeRad, color: handleColor)
+					line(points: [#p, #i, #j, #k, #l, #m], radius: lineRad, color: handleColor)
+					spline(points: [#m, #n, #o, #p], radius: lineRad, color: handleColor)
+				}
+			}
+		}
+		// Spout
+		let spoutNodeRad = 0
+		rotate(center: <0, 0, 0>, axis: <0, 1, 0>, angle: -103) {
+			translate(y: baseHeight + topHeight + 0.6, z: topRad) {
+				let width = 1
+				node(#q, <y: -1.5>, radius: spoutNodeRad)
+				node(#r, <x: -1 * width, y: 1>, radius: spoutNodeRad)
+				node(#s, <x: width, y: 1>, radius: spoutNodeRad)
+				node(#t, <y: 0.8, z: 1.45>, radius: spoutNodeRad)
+				node(#u, <y: 0.35, z: 0.95>, radius: spoutNodeRad)
+				node(#v, <x: -1 * width / 3.1415, y: 1, z: 1>, radius: spoutNodeRad)
+				node(#w, <x: width / 3.1415, y: 1, z: 1>, radius: spoutNodeRad)
+				line(points: [#r, #v, #t], radius: lineRad)
+				line(points: [#s, #w, #t], radius: lineRad)
+				line(points: [#u, #q], radius: lineRad)
+				line(points: [#u, #t], radius: lineRad)
+				line(points: [#r, #q, #s], radius: lineRad)
+				line(points: [#v, #u, #w], radius: lineRad)
+			}
+		}
+		// Top handle
+		let handleHeight = 1.45
+		let handleSides = 6
+		translate(y: topStart + topHeight + 0.3) {
+			node(#handle-top, <y: handleHeight>, radius: nodeRad)
+			let handleNodes = drawCircle(center: [0, handleHeight - 0.3, 0], radius: 0.6, count: handleSides, connect: true)
+			for i in 0 to handleNodes.length() - 1 {
+				line(points: [#handle-top, handleNodes[i]], radius: lineRad)
+			}
+			let bottomHandleNodes = drawCircle(center: [0, 0, 0], radius: 0.3, count: handleSides, connect: true)
+			for i in 0 to bottomHandleNodes.length() - 1 {
+				line(points: [bottomHandleNodes[i], handleNodes[i]], radius: lineRad)
+			}
+		}
+	}
+	rotate(#cafetera, center: <0, 0, 0>, angle: @time % 10000 / 10000 * 365)
+}
+
+func drawCircle(center: [Number], radius: Number, count: Number, angleOffset: Number = 0, color: Number = 1, connect: Boolean = true): [NodeIdentifier] {
+	let angle = 3.1415 * 2 / count
+	var nodes: [NodeIdentifier]
+	for i in 0 to count {
+		let x = center[0] + radius * cos(angle * i + angleOffset)
+		let z = center[2] + radius * sin(angle * i + angleOffset)
+		let point = node(point: <x: x, y: center[1], z: z>, radius: 0.01, color: color)
+		nodes.add(point)
+	}
+	if connect {
+		line(points: nodes, radius: 0.03, color: color)
+	}
+	return nodes
+}
