@@ -1,4 +1,4 @@
-palette("#d0e5a3", "#104f61", "#2e916a")
+palette("#C38154", "#5e3327", "#FFC26F")
 state {
 	group(#cafetera) {
 		let nodeRad = 0.07
@@ -106,7 +106,7 @@ state {
 			}
 		}
 	}
-	rotate(#cafetera, center: <0, 0, 0>, angle: @time % 10000 / 10000 * 365)
+	rotate(#cafetera, center: <0, 0, 0>, angle: easeInOut(@time % 5000 / 5000) * 360 - 180)
 }
 
 func drawCircle(center: [Number], radius: Number, count: Number, angleOffset: Number = 0, color: Number = 1, connect: Boolean = true): [NodeIdentifier] {
@@ -122,4 +122,8 @@ func drawCircle(center: [Number], radius: Number, count: Number, angleOffset: Nu
 		line(points: nodes, radius: 0.03, color: color)
 	}
 	return nodes
+}
+
+func easeInOut(x: Number): Number {
+	return -1 * (cos(3.1415 * x) - 1) / 2
 }
