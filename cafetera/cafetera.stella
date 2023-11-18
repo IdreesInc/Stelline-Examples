@@ -1,5 +1,7 @@
 palette("#C38154", "#5e3327", "#FFC26F")
 state {
+	let start = 0
+	let end = easeInOut(@time % 5000 / 5000 * 2)
 	group(#cafetera) {
 		let nodeRad = 0.07
 		let lineRad = 0.03
@@ -16,21 +18,21 @@ state {
 					node(#b, <x: -1 * sliceRad, y: baseHeight>, radius: nodeRad)
 					node(#c, <x: sliceRad, y: baseHeight>, radius: nodeRad)
 					node(#d, <x: sliceRad + sliceMod>, radius: nodeRad)
-					line(points: [#a, #b], radius: lineRad)
-					line(points: [#c, #d], radius: lineRad)
-					spline(points: [#a, <-0.75, -0.2>, <0, -0.3>, <0.75, -0.2>, #d], radius: lineRad)
-					spline(points: [#b, <-0.75, baseHeight + 0.2>, <0, baseHeight + 0.3>, <0.75, baseHeight + 0.2>, #c], radius: lineRad)
+					line(points: [#a, #b], radius: lineRad, progressStart: start, progressEnd: end)
+
+					curve(points: [#a, <-0.75, -0.2>, <0, -0.3>, <0.75, -0.2>, #d], radius: lineRad, progressStart: start, progressEnd: end)
+					curve(points: [#b, <-0.75, baseHeight + 0.2>, <0, baseHeight + 0.3>, <0.75, baseHeight + 0.2>, #c], radius: lineRad, progressStart: start, progressEnd: end)
 				}
 			}
 		}
-		drawCircle(center: [0, 0.15, 0], radius: baseRad * 1.03, count: 30, color: 1)
+		drawCircle(center: [0, 0.15, 0], radius: baseRad * 1.03, count: 30, color: 1, start: start, end: end)
 		baseHeight = baseHeight + 0.125
 		// Middle bit
 		let midRad = 2.25
-		let bottom = drawCircle(center: [0, baseHeight + 0.5, 0], radius: midRad, count: 10, color: 1)
-		let top = drawCircle(center: [0, baseHeight + 1.5, 0], radius: midRad, count: 10, color: 1)
+		let bottom = drawCircle(center: [0, baseHeight + 0.5, 0], radius: midRad, count: 10, color: 1, start: start, end: end)
+		let top = drawCircle(center: [0, baseHeight + 1.5, 0], radius: midRad, count: 10, color: 1, start: start, end: end)
 		for i in 0 to bottom.length() - 1 {
-			line(points: [bottom[i], top[i]], radius: lineRad, color: 1)
+			line(points: [bottom[i], top[i]], radius: lineRad, color: 1, progressStart: start, progressEnd: end)
 		}
 		// Top bit
 		let topRad = baseRad
@@ -45,16 +47,16 @@ state {
 					node(#f, <x: -1 * sliceRad - sliceMod, y: topStart + topHeight>, radius: nodeRad)
 					node(#g, <x: sliceRad + sliceMod, y: topStart + topHeight>, radius: nodeRad)
 					node(#h, <x: sliceRad, y: topStart>, radius: nodeRad)
-					line(points: [#e, #f, #g, #h], radius: lineRad)
-					spline(points: [#e, <-0.75, topStart - 0.2>, <0, topStart - 0.3>, <0.75, topStart - 0.2>, #h], radius: lineRad)
+					line(points: [#e, #f, #g, #h], radius: lineRad, progressStart: start, progressEnd: end)
+					curve(points: [#e, <-0.75, topStart - 0.2>, <0, topStart - 0.3>, <0.75, topStart - 0.2>, #h], radius: lineRad, progressStart: start, progressEnd: end)
 					node(#top, point: <y: topStart + topHeight + 0.3, z: topRad + 0.04>, radius: nodeRad)
-					line(points: [#f, #top, #g], radius: lineRad)
+					line(points: [#f, #top, #g], radius: lineRad, progressStart: start, progressEnd: end)
 				}
 			}
 		}
 		// Handle
 		let handleColor = 1
-		let handleNodeRad = 0.02
+		let handleNodeRad = 0
 		rotate(center: <0, 0, 0>, axis: <0, 1, 0>, angle: -17) {
 			translate(y: -0.8) {
 				refract(center: <0, 0, 0>, count: 2, angle: 8) {
@@ -66,8 +68,8 @@ state {
 					node(#n, <x: 4.6, y: topStart + topHeight - 1.4, z: 0>, radius: handleNodeRad, color: handleColor)
 					node(#o, <x: 4.2, y: topStart + topHeight - 0.8, z: 0>, radius: handleNodeRad, color: handleColor)
 					node(#p, <x: 3.2, y: topStart + topHeight - 0.8, z: 0>, radius: handleNodeRad, color: handleColor)
-					line(points: [#p, #i, #j, #k, #l, #m], radius: lineRad, color: handleColor)
-					spline(points: [#m, #n, #o, #p], radius: lineRad, color: handleColor)
+					line(points: [#p, #i, #j, #k, #l, #m], radius: lineRad, color: handleColor, progressStart: start, progressEnd: end)
+					curve(points: [#m, #n, #o, #p], radius: lineRad, color: handleColor, progressStart: start, progressEnd: end)
 				}
 			}
 		}
@@ -83,12 +85,12 @@ state {
 				node(#u, <y: 0.35, z: 0.95>, radius: spoutNodeRad)
 				node(#v, <x: -1 * width / 3.1415, y: 1, z: 1>, radius: spoutNodeRad)
 				node(#w, <x: width / 3.1415, y: 1, z: 1>, radius: spoutNodeRad)
-				line(points: [#r, #v, #t], radius: lineRad)
-				line(points: [#s, #w, #t], radius: lineRad)
-				line(points: [#u, #q], radius: lineRad)
-				line(points: [#u, #t], radius: lineRad)
-				line(points: [#r, #q, #s], radius: lineRad)
-				line(points: [#v, #u, #w], radius: lineRad)
+				line(points: [#r, #v, #t], radius: lineRad, progressStart: start, progressEnd: end)
+				line(points: [#s, #w, #t], radius: lineRad, progressStart: start, progressEnd: end)
+				line(points: [#u, #q], radius: lineRad, progressStart: start, progressEnd: end)
+				line(points: [#u, #t], radius: lineRad, progressStart: start, progressEnd: end)
+				line(points: [#r, #q, #s], radius: lineRad, progressStart: start, progressEnd: end)
+				line(points: [#v, #u, #w], radius: lineRad, progressStart: start, progressEnd: end)
 			}
 		}
 		// Top handle
@@ -96,20 +98,20 @@ state {
 		let handleSides = 6
 		translate(y: topStart + topHeight + 0.3) {
 			node(#handle-top, <y: handleHeight>, radius: nodeRad)
-			let handleNodes = drawCircle(center: [0, handleHeight - 0.3, 0], radius: 0.6, count: handleSides, connect: true)
+			let handleNodes = drawCircle(center: [0, handleHeight - 0.3, 0], radius: 0.6, count: handleSides, connect: true, start: start, end: end)
 			for i in 0 to handleNodes.length() - 1 {
-				line(points: [#handle-top, handleNodes[i]], radius: lineRad)
+				line(points: [#handle-top, handleNodes[i]], radius: lineRad, progressStart: start, progressEnd: end)
 			}
-			let bottomHandleNodes = drawCircle(center: [0, 0, 0], radius: 0.3, count: handleSides, connect: true)
+			let bottomHandleNodes = drawCircle(center: [0, 0, 0], radius: 0.3, count: handleSides, connect: true, start: start, end: end)
 			for i in 0 to bottomHandleNodes.length() - 1 {
-				line(points: [bottomHandleNodes[i], handleNodes[i]], radius: lineRad)
+				line(points: [bottomHandleNodes[i], handleNodes[i]], radius: lineRad, progressStart: start, progressEnd: end)
 			}
 		}
 	}
-	rotate(#cafetera, center: <0, 0, 0>, angle: easeInOut(@time % 5000 / 5000) * 360 - 180)
+	rotate(#cafetera, center: <0, 0, 0>, angle: easeInOut((@time + 2500) % 5000 / 5000) * 360 - 180)
 }
 
-func drawCircle(center: [Number], radius: Number, count: Number, angleOffset: Number = 0, color: Number = 1, connect: Boolean = true): [NodeIdentifier] {
+func drawCircle(center: [Number], radius: Number, count: Number, start: Number, end: Number, angleOffset: Number = 0, color: Number = 1, connect: Boolean = true): [NodeIdentifier] {
 	let angle = 3.1415 * 2 / count
 	var nodes: [NodeIdentifier]
 	for i in 0 to count {
@@ -119,7 +121,7 @@ func drawCircle(center: [Number], radius: Number, count: Number, angleOffset: Nu
 		nodes.add(point)
 	}
 	if connect {
-		line(points: nodes, radius: 0.03, color: color)
+		line(points: nodes, radius: 0.03, color: color, progressStart: start, progressEnd: end)
 	}
 	return nodes
 }
