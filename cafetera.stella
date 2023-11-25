@@ -1,5 +1,5 @@
 palette("#C38154", "#5e3327", "#FFC26F")
-state {
+form {
 	let start = 0
 	let end = easeInOut(@time % 5000 / 5000 * 2)
 	group(#cafetera) {
@@ -19,9 +19,15 @@ state {
 					node(#c, <x: sliceRad, y: baseHeight>, radius: nodeRad)
 					node(#d, <x: sliceRad + sliceMod>, radius: nodeRad)
 					line(points: [#a, #b], radius: lineRad, progressStart: start, progressEnd: end)
-
-					curve(points: [#a, <-0.75, -0.2>, <0, -0.3>, <0.75, -0.2>, #d], radius: lineRad, progressStart: start, progressEnd: end)
-					curve(points: [#b, <-0.75, baseHeight + 0.2>, <0, baseHeight + 0.3>, <0.75, baseHeight + 0.2>, #c], radius: lineRad, progressStart: start, progressEnd: end)
+					curve(points: [#a, <-0.75, -0.2>,
+						<0, -0.3>,
+						<0.75, -0.2>,
+						#d], radius: lineRad, progressStart: start, progressEnd: end)
+					curve(points: [#b,
+						<-0.75, baseHeight + 0.2>,
+						<0, baseHeight + 0.3>,
+						<0.75, baseHeight + 0.2>,
+						#c], radius: lineRad, progressStart: start, progressEnd: end)
 				}
 			}
 		}
@@ -29,7 +35,12 @@ state {
 		baseHeight = baseHeight + 0.125
 		// Middle bit
 		let midRad = 2.25
-		let bottom = drawCircle(center: [0, baseHeight + 0.5, 0], radius: midRad, count: 10, color: 1, start: start, end: end)
+		let bottom = drawCircle(center: [0, baseHeight + 0.5, 0],
+			radius: midRad,
+			count: 10,
+			color: 1,
+			start: start,
+			end: end)
 		let top = drawCircle(center: [0, baseHeight + 1.5, 0], radius: midRad, count: 10, color: 1, start: start, end: end)
 		for i in 0 to bottom.length() - 1 {
 			line(points: [bottom[i], top[i]], radius: lineRad, color: 1, progressStart: start, progressEnd: end)
@@ -48,7 +59,12 @@ state {
 					node(#g, <x: sliceRad + sliceMod, y: topStart + topHeight>, radius: nodeRad)
 					node(#h, <x: sliceRad, y: topStart>, radius: nodeRad)
 					line(points: [#e, #f, #g, #h], radius: lineRad, progressStart: start, progressEnd: end)
-					curve(points: [#e, <-0.75, topStart - 0.2>, <0, topStart - 0.3>, <0.75, topStart - 0.2>, #h], radius: lineRad, progressStart: start, progressEnd: end)
+					curve(points: [#e,
+							<-0.75, topStart - 0.2>,
+							<0, topStart - 0.3>,
+							<0.75, topStart - 0.2>,
+							#h],
+						radius: lineRad, progressStart: start, progressEnd: end)
 					node(#top, point: <y: topStart + topHeight + 0.3, z: topRad + 0.04>, radius: nodeRad)
 					line(points: [#f, #top, #g], radius: lineRad, progressStart: start, progressEnd: end)
 				}

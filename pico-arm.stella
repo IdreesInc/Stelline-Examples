@@ -1,0 +1,74 @@
+palette(secondary: "#6a95ff", tertiary: "#08f6a9")
+let len = 9
+let width = 8
+let height = 2
+let thickness = 0.05
+
+form {
+	let mod = sin(time % 6000 / 6000 * 3.1415 * 2) * 0.5 + 0.5
+	let firstAngle = -110 * mod
+	let secondAngle = 100 * mod
+	let thirdAngle = -235 * mod
+	let armRot = 0
+	// Bottom half
+	section()
+	// Top half
+	rotate(angle: armRot, axis: <y: 1>) {
+		translate(y: height) {
+			let firstRotOrigin = <width + height / 2, height / 2>
+			let secondRotOrigin = <y: height / 2>
+			// node(point: firstRotOrigin, radius: 0.1, color: 2)
+			// node(point: secondRotOrigin, radius: 0.1, color: 2)
+			rotate(angle: firstAngle, axis: <z: 1>, center: firstRotOrigin) {
+				section(width / 3)
+				rotate(angle: secondAngle, axis: <z: 1>, center: secondRotOrigin) {
+					translate(z: width / 3) {
+						section(width / 3)
+					}
+					rotate(angle: thirdAngle, axis: <z: 1>, center: firstRotOrigin) {
+						translate(z: 2 * width / 3) {
+							section(width / 3)
+						}
+					}
+				}
+			}
+		}
+	}
+	// Camera
+	let circMargin = 0.35
+	let a = <len, height - circMargin, width>
+	let b = <a.x, circMargin, a.z>
+	let c = <len, height / 2, width - height / 4 - circMargin>
+	translate(x: 0.5, z: width / -3 / 2 + circMargin / 2) {
+		circle(a, b, c, radius: thickness * 1.3, color: 2)
+	}
+	// Raspberry Pi Zero
+	let piY = height / 2
+	let piA = <x: 7.5, z: 1, y: piY>
+	let piB = <x: 7.5, z: 4, y: piY>
+	let piC = <x: 1, z: 4, y: piY>
+	let piD = <x: 1, z: 1, y: piY>
+	line(points: [piA, piB, piC, piD, piA], color: 3, radius: thickness * 1.8)
+}
+
+func section(width: Number = width) {
+	slice()
+	slice(width)
+	line(points: [<0, 0, 0>, <0, 0, width>], radius: thickness)
+	line(points: [<len, 0, 0>, <len, 0, width>], radius: thickness)
+	line(points: [<0, height, 0>, <0, height, width>], radius: thickness)
+	line(points: [<len, height, 0>, <len, height, width>], radius: thickness)
+	line(points: [<-1 * height / 2, height / 2, 0>, <-1 * height / 2, height / 2, width>], radius: thickness)
+	line(points: [<len + height / 2, height / 2, 0>, <len + height / 2, height / 2, width>], radius: thickness)
+}
+
+func slice(z: Number = 0) {
+	let curveRad = height / 2
+	let radius = 0
+	let a = <0, 0, z>
+	let b = <len, 0, z>
+	line(points: [a, b], radius: thickness)
+	arc(<len, 0, z>, <len, curveRad * 2, z>, <len + curveRad, curveRad, z>, thickness)
+	arc(<0, 0, z>, <0, curveRad * 2, z>, <-1 * curveRad, curveRad, z>, thickness)
+	line(points: [<a.x, a.y + curveRad * 2, a.z>, <b.x, b.y + curveRad * 2, b.z>], radius: thickness)
+}
