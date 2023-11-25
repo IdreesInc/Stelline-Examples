@@ -1,7 +1,8 @@
+palette("#13003a", "#866ff8", "#e4ebd0", "#bae0ac")
 form {
 	let radius = 10
 	let height = 15
-	face(center: <0, 0, 0>, vertical: false) {
+	follow(center: <0, 0, 0>, vertical: false) {
 		drawHalfCircle([0, height, 0], radius, 32)
 		line(points: [<-1 * radius, 0, 0>, <-1 * radius, height, 0>])
 		line(points: [<radius, 0, 0>, <radius, height, 0>])
@@ -11,7 +12,7 @@ form {
 	rotate(center: <0, 0, 0>, axis: <0, 1, 0>, angle: @time % 5000 / 5000 * 360) {
 		node(#abc, point: <x: -3, y: 3>, color: 2)
 		node(#def, point: <x: 5, y: 8>, color: 2)
-		line(points: [#abc, #def], color: 2)
+		curve(points: [#abc, #def], color: 2)
 	}
 }
 
@@ -25,7 +26,7 @@ func drawHalfCircle(center: [Number], radius: Number, count: Number, angleOffset
 		nodes.add(point)
 	}
 	if connect {
-		spline(points: nodes, color: color)
+		curve(points: nodes, color: color)
 	}
 	return nodes
 }
@@ -40,7 +41,7 @@ func drawFlatCircle(center: [Number], radius: Number, count: Number, angleOffset
 		nodes.add(point)
 	}
 	if connect {
-		spline(points: nodes, color: color)
+		curve(points: nodes, color: color)
 	}
 	return nodes
 }
