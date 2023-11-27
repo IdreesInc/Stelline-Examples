@@ -12,7 +12,7 @@ form {
 	rotate(center: <0, 0, 0>, axis: <0, 1, 0>, angle: @time % 5000 / 5000 * 360) {
 		node(#abc, point: <x: -3, y: 3>, color: 2)
 		node(#def, point: <x: 5, y: 8>, color: 2)
-		curve(points: [#abc, #def], color: 2)
+		line(points: [#abc, #def], color: 2, curve: true)
 	}
 }
 
@@ -26,7 +26,7 @@ func drawHalfCircle(center: [Number], radius: Number, count: Number, angleOffset
 		nodes.add(point)
 	}
 	if connect {
-		curve(points: nodes, color: color)
+		line(points: nodes, color: color, curve: true)
 	}
 	return nodes
 }
@@ -41,7 +41,7 @@ func drawFlatCircle(center: [Number], radius: Number, count: Number, angleOffset
 		nodes.add(point)
 	}
 	if connect {
-		curve(points: nodes, color: color)
+		line(points: nodes, color: color, curve: true)
 	}
 	return nodes
 }

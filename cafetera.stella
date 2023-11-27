@@ -19,15 +19,15 @@ form {
 					node(#c, <x: sliceRad, y: baseHeight>, radius: nodeRad)
 					node(#d, <x: sliceRad + sliceMod>, radius: nodeRad)
 					line(points: [#a, #b], radius: lineRad, progressStart: start, progressEnd: end)
-					curve(points: [#a, <-0.75, -0.2>,
+					line(points: [#a, <-0.75, -0.2>,
 						<0, -0.3>,
 						<0.75, -0.2>,
-						#d], radius: lineRad, progressStart: start, progressEnd: end)
-					curve(points: [#b,
+						#d], curve: true, radius: lineRad, progressStart: start, progressEnd: end)
+					line(points: [#b,
 						<-0.75, baseHeight + 0.2>,
 						<0, baseHeight + 0.3>,
 						<0.75, baseHeight + 0.2>,
-						#c], radius: lineRad, progressStart: start, progressEnd: end)
+						#c], curve: true, radius: lineRad, progressStart: start, progressEnd: end)
 				}
 			}
 		}
@@ -59,12 +59,12 @@ form {
 					node(#g, <x: sliceRad + sliceMod, y: topStart + topHeight>, radius: nodeRad)
 					node(#h, <x: sliceRad, y: topStart>, radius: nodeRad)
 					line(points: [#e, #f, #g, #h], radius: lineRad, progressStart: start, progressEnd: end)
-					curve(points: [#e,
+					line(points: [#e,
 							<-0.75, topStart - 0.2>,
 							<0, topStart - 0.3>,
 							<0.75, topStart - 0.2>,
 							#h],
-						radius: lineRad, progressStart: start, progressEnd: end)
+						radius: lineRad, curve: true, progressStart: start, progressEnd: end)
 					node(#top, point: <y: topStart + topHeight + 0.3, z: topRad + 0.04>, radius: nodeRad)
 					line(points: [#f, #top, #g], radius: lineRad, progressStart: start, progressEnd: end)
 				}
@@ -85,7 +85,7 @@ form {
 					node(#o, <x: 4.2, y: topStart + topHeight - 0.8, z: 0>, radius: handleNodeRad, color: handleColor)
 					node(#p, <x: 3.2, y: topStart + topHeight - 0.8, z: 0>, radius: handleNodeRad, color: handleColor)
 					line(points: [#p, #i, #j, #k, #l, #m], radius: lineRad, color: handleColor, progressStart: start, progressEnd: end)
-					curve(points: [#m, #n, #o, #p], radius: lineRad, color: handleColor, progressStart: start, progressEnd: end)
+					line(points: [#m, #n, #o, #p], curve: true, radius: lineRad, color: handleColor, progressStart: start, progressEnd: end)
 				}
 			}
 		}
