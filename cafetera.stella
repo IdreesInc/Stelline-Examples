@@ -2,7 +2,7 @@ palette("#C38154", "#5e3327", "#FFC26F")
 form {
 	let start = 0
 	let end = easeInOut(@time % 5000 / 5000 * 2)
-	group(#cafetera) {
+	construct(#cafetera) {
 		let nodeRad = 0.07
 		let lineRad = 0.03
 		node(color: 2, point: <y: 3>)
