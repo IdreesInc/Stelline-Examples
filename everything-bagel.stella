@@ -1,0 +1,21 @@
+let sliceRad = 100
+let torusRad = 300
+
+form {
+	default node(radius: 1.35)
+	refract(center: <0, 0, 0>, axis: <-1, 1, 0>, count: 75) {
+		drawCircle(@time)
+	}
+}
+
+func drawCircle(time: Number) {
+	let center = <torusRad, 0, 0>
+	let count = 30
+	let pi = 3.14159
+	let offset = time % 1500 / -1500
+	for i in 0 to count {
+		let val = i + offset
+		let loc = <center.x + sliceRad * cos(val * 2 * pi / count), center.y + sliceRad * sin(val * 2 * pi / count), center.z>
+		node(point: loc, color: min(1, loc.y / sliceRad + 1))
+	}
+}
