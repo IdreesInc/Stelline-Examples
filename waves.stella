@@ -1,0 +1,121 @@
+palette(secondary: "#9bc5ef", tertiary: "#000")
+palette(secondary: "#30b1ce", tertiary: "#000")
+
+let width = 90
+let height = 135
+let z = 0.2
+let a = <width / -2, height / 2, z>
+let b = <width / 2, height / 2, z>
+let c = <width / 2, height / -2, z>
+let d = <width / -2, height / -2, z>
+let scale = 1
+
+form {
+	//rain(time)
+	waves(time)
+	window()
+}
+
+func window() {
+	construct(#window) {
+		default line(radius: 0.2)
+		windowFrame()
+		sill()
+		wall()
+	}
+}
+
+func windowFrame() {
+	// Border
+	line(#window-border, points: [a, b, c, d, a])
+	// Panes
+	line(points: [<width / 6, height / 2>, <width / 6, height / -2>])
+	line(points: [<width / -6, height / 2>, <width / -6, height / -2>])
+	line(points: [<a.x, height / 4>, <b.x, height / 4>])
+	line(points: [<a.x, height / -4>, <b.x, height / -4>])
+	line(points: [<a.x, 0>, <b.x, 0>])
+}
+
+func sill() {
+	let dist = 6
+	let sillLength = 5 + dist
+	let sillEndRight = <c.x * scale, c.y * scale, sillLength>
+	let sillEndLeft = <d.x * scale, d.y * scale, sillLength>
+	project(#window-border, z: dist, connect: true)
+	line(points: [<d.x * scale, d.y * scale, dist>,
+	<c.x * scale, c.y * scale, dist>,
+	sillEndRight,
+	sillEndLeft,
+	<d.x * scale, d.y * scale, dist>])
+	construct(#sill-pattern) {
+		line(points: [sillEndLeft,
+		sillEndLeft + <y: -3>,
+		sillEndLeft + <y: -5, z: -4>,
+		sillEndLeft + <y: -8, z: -6>,
+		sillEndLeft + <y: -8.4, z: -10>,
+		], curve: true)
+	}
+	project(#sill-pattern, x: width, connect: true)
+}
+
+func wall() {
+	let margin = 300
+	let wallColor = 0
+	surface(points: [<a.x - margin, a.y + margin>, <a.x - margin, a.y>, <b.x + margin, b.y>, <b.x + margin, b.y + margin>], color: wallColor)
+	surface(points: [<d.x - margin, d.y - margin>, <d.x - margin, d.y>, <c.x + margin, c.y>, <c.x + margin, c.y - margin>], color: wallColor)
+	surface(points: [<a.x - margin, a.y>, <a.x, a.y>, <d.x, d.y>, <d.x - margin, d.y>], color: wallColor)
+	surface(points: [<b.x + margin, b.y>, <b.x, b.y>, <c.x, c.y>, <c.x + margin, c.y>], color: wallColor)
+}
+
+func waves(time: Number) {
+	let separation = 30
+	let amountX = 30
+	let amountZ = 30
+	let yMod = 30
+	let minRad = 0.4
+	let radMod = 0.2
+	rotate(angle: 15) {
+		translate(y: -90, z: -0.5 * amountZ * separation - 140) {
+			for ix in 0 to amountX {
+				for iz in 0 to amountZ {
+					let count = time / 500
+					let y = sin((ix + count) * 0.3) + sin((iz + count) * 0.5)
+					node(point: <ix * separation - (amountX  * separation / 2), y * yMod,
+					iz * separation - (amountZ  * separation / 2)>,
+					radius: (sin((ix + count) * radMod) + minRad) + (sin((iz + count) * radMod) + minRad),
+					color: 2 - min(0.7, max(0, y)))
+				}
+			}
+		}
+	}
+}
+
+func rain(time: Number) {
+	default node(radius: 1)
+	construct(#rain) {
+		let space = 4.4
+		let lines = 22
+		let height = 140
+		let dur = 1750
+		let durMod = 200
+		let modOne = 1 - time % (dur - durMod) / (dur - durMod)
+		let modTwo = 1 - time % dur / dur
+		let modThree = 1 - time % (dur + durMod) / (dur + durMod)
+		let z = -0.2
+		for i in lines / -2 to lines / 2 {
+			var mod = modOne
+			if (i % 5 == 0) {
+				mod = modTwo
+			} else if (i % 7 == 0) {
+				mod = modThree
+			}
+			let a = <i * space + 16, height / -2, z>
+			let b = <i * space + 5, height / 2, z>
+			let yMod = ((mod + 0.714 * (i + lines / 2)) % 1)
+			let color = (1 - yMod) + 2
+			line(points: [a, b], color: color, progressStart: yMod)
+			let y = height * yMod - height / 2
+			node(point: <a.x + (b.x - a.x) * yMod, y, z>, color: color)
+		}
+	}
+}
