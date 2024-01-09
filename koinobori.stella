@@ -1,0 +1,252 @@
+palette(secondary: "#318db2", tertiary: "#000")
+
+let p: [Number] = [0]
+let permutation = [151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225,
+   140, 36, 103, 30, 69, 142, 8, 99, 37, 240, 21, 10, 23, 190, 6, 148,
+   247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117, 35, 11, 32,
+   57, 177, 33, 88, 237, 149, 56, 87, 174, 20, 125, 136, 171, 168, 68, 175,
+   74, 165, 71, 134, 139, 48, 27, 166, 77, 146, 158, 231, 83, 111, 229, 122,
+   60, 211, 133, 230, 220, 105, 92, 41, 55, 46, 245, 40, 244, 102, 143, 54,
+   65, 25, 63, 161, 1, 216, 80, 73, 209, 76, 132, 187, 208, 89, 18, 169,
+   200, 196, 135, 130, 116, 188, 159, 86, 164, 100, 109, 198, 173, 186, 3, 64,
+   52, 217, 226, 250, 124, 123, 5, 202, 38, 147, 118, 126, 255, 82, 85, 212,
+   207, 206, 59, 227, 47, 16, 58, 17, 182, 189, 28, 42, 223, 183, 170, 213,
+   119, 248, 152, 2, 44, 154, 163, 70, 221, 153, 101, 155, 167, 43, 172, 9,
+   129, 22, 39, 253, 19, 98, 108, 110, 79, 113, 224, 232, 178, 185, 112, 104,
+   218, 246, 97, 228, 251, 34, 242, 193, 238, 210, 144, 12, 191, 179, 162, 241,
+   81, 51, 145, 235, 249, 14, 239, 107, 49, 192, 214, 31, 181, 199, 106, 157,
+   184, 84, 204, 176, 115, 121, 50, 45, 127, 4, 150, 254, 138, 236, 205, 93,
+   222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180]
+
+form {
+	construct(#koinobori) {
+		let poleHeight = 200
+		construct(#pole) {
+			line(radius: 0.7, points: [<y: 0>, <y: poleHeight>])
+		}
+		construct(#wheel) {
+			default line(radius: 0.3)
+			let wheelRad = 5
+			let wheelDist = 4
+			translate(y: poleHeight - wheelRad, z: wheelDist / -2) {
+				project(z: wheelDist) {
+					circle(<>, <y: wheelRad * 2>, <x: wheelRad, y: wheelRad>)
+					refract(axis: <z: 1>, center: <y: wheelRad>, count: 3) {
+						line(points: [<-1 * wheelRad, y: wheelRad>, <wheelRad, y: wheelRad>], radius: 0.25)
+					}
+				}
+				line(points: [<y: wheelRad, z: wheelDist>, <y: wheelRad>], radius: 0.5)
+			}
+		}
+		rotate(#wheel, axis: <z: 1>, angle: @time %/ 1000 * -360)
+		rotate(#wheel, angle: -40)
+		let windCycle = 4000
+		translate(x: 0.3, y: 185) {
+			rotate(angle: easeInOut((@time + 200) %/ 1900 * 2) * -2.5 - 5, axis: <0, 0, 1>, center: <>) {
+				windsock(@time)
+			}
+		}
+		let leftRightCycle = 1100
+		translate(x: 0.3, y: 160) {
+			rotate(angle: easeInOut(@time %/ windCycle * 2) * -20 - 10, axis: <0, 0, 1>, center: <>) {
+				rotate(angle: easeInOut(@time %/ leftRightCycle * 2) * -6 + 3, axis: <0, 1, 0>, center: <>) {
+					koinobori(@time)
+				}
+			}
+		}
+		translate(x: 0.3, y: 125) {
+			rotate(angle: easeInOut((@time + 300) %/ windCycle * 2) * -20 - 10, axis: <0, 0, 1>, center: <>) {
+				rotate(angle: easeInOut((@time + 500) %/ leftRightCycle * 2) * -6 + 3, axis: <0, 1, 0>, center: <>) {
+					koinobori(@time)
+				}
+			}
+		}
+		ground(@time)
+	}
+	rotate(#koinobori, angle: 20)
+	translate(#koinobori, z: -400, y: -100)
+}
+
+func ground(time: Number) {
+	construct(#ground) {
+		default line(radius: 0.2, color: 0.5)
+		let numOfLines = 15
+		let length = 1100
+		let spacing = length / numOfLines
+		let numOfParts = 20
+		let perlinDuration = 11000
+		let windDuration = 2000
+		let waveHeight = -140
+		for i in 0 to numOfLines - 1 {
+			let x = (i - numOfLines / 2) * spacing
+			var points: [Point]
+			for part in 0 to numOfParts - 1 {
+				let z = length / -2 + part * length / numOfParts
+				let px = part / numOfParts
+				let py = i / numOfLines
+				var n = perlin(y: py, x: px, z: clamp(easeInOut((time %/ perlinDuration) * 2), 0, 0.999))
+				n = n * waveHeight
+				n = n * (1 + (i %/ 2) * 1.3)
+				points.add(<x: x, y: n, z: z>)
+			}
+			let mod = i * 3 %/ 7 * windDuration
+			let start = clamp((time + mod) %/ windDuration * 1.5 - 0.5, -0.5, 1)
+			let end = clamp((time + mod) %/ windDuration * 1.5, -0.5, 1)
+			line(points: points, progressStart: start, progressEnd: end)
+		}
+	}
+	rotate(#ground, angle: 90)
+}
+
+func windsock(time: Number) {
+	let mouthRad = 6
+	let ropeLen = 11
+	construct {
+		// Rope
+		default line(radius: 0.1)
+		let stringOffset = 1.5
+		line(points: [<y: stringOffset>, <x: ropeLen, y: mouthRad>])
+		line(points: [<y: -1 * stringOffset>, <x: ropeLen, y: -1 * mouthRad>])
+	}
+	let streamerLen = 60
+	let bodyLen = 26
+	construct {
+		default line(radius: 0.2)
+		circle(<x: ropeLen, z: -1 * mouthRad>, <x: ropeLen, z: mouthRad>, <x: ropeLen, y: mouthRad>)
+		circle(<x: ropeLen + bodyLen, z: -1 * mouthRad>, <x: ropeLen + bodyLen, z: mouthRad>, <x: ropeLen + bodyLen, y: mouthRad>)
+		let streamerStart = <x: ropeLen + bodyLen, y: mouthRad>
+		refract(center: <>, axis: <1>, count: 7) {
+			let last = node(point: <x: ropeLen + streamerLen, y: mouthRad + easeInOut(time %/ 1400 * 2) * -2 + 0.5,
+			z: easeInOut(time %/ 3000 * 2) * 10 - 5>, radius: 0.5)
+			line(points: [<x: ropeLen, y: mouthRad>, streamerStart])
+			line(points: [streamerStart, <x: streamerStart.x + streamerLen / 5, y: mouthRad, z: easeInOut((time + 200) %/ 3000 * 2) * 2 - 1>,
+			last],
+			curve: true)
+		}
+	}
+}
+
+func koinobori(time: Number) {
+	let mouthRad = 8
+	let ropeLen = 11
+	construct {
+		// Rope
+		default line(radius: 0.1)
+		let stringOffset = 1.5
+		line(points: [<y: stringOffset>, <x: ropeLen, y: mouthRad>])
+		line(points: [<y: -1 * stringOffset>, <x: ropeLen, y: -1 * mouthRad>])
+	}
+	construct {
+		// Mouth
+		default line(radius: 0.4)
+		circle(<x: ropeLen, z: -1 * mouthRad>, <x: ropeLen, z: mouthRad>, <x: ropeLen, y: mouthRad>)
+		
+		// Body
+		let headLen = 13
+		let headTop = <x: ropeLen + headLen, y: mouthRad + 2>
+		let headBottom = <x: ropeLen + headLen, y: -1 * mouthRad - 2>
+		let bodyLen = 23
+		let bodyTop = <x: headTop.x + bodyLen, y: mouthRad - 1>
+		let bodyBottom = <x: headBottom.x + bodyLen, y: -1 * mouthRad + 1>
+		circle(headTop, headBottom, <x: headTop.x, y: headBottom.y + (headTop.y - headBottom.y) / 2, z: (headTop.y - headBottom.y) / 2>)
+		node(point: <headTop.x - headLen / 2.5, headTop.y - headLen / 2.25>, color: 2, radius: 2)
+		line(points: [<x: ropeLen, y: mouthRad>, headTop, bodyTop], curve: true)
+		line(points: [<x: ropeLen, y: -1 * mouthRad>, headBottom, bodyBottom], curve: true)
+		let tailLen = 16
+		let tailZ = easeInOut(time %/ 400 * 2) * 1.8 - 0.9
+		let tailTop = <x: bodyTop.x + tailLen, y: bodyTop.y + 3, z: tailZ>
+		let tailBottom = <x: bodyBottom.x + tailLen, y: bodyBottom.y - 2, z: tailZ * -1>
+		let tailMiddle = <x: tailTop.x - tailLen / 3, y: tailBottom.y + (tailTop.y - tailBottom.y) / 2, z: 0>
+		line(points: [bodyTop, tailTop, tailMiddle, tailBottom, bodyBottom], curve: true)
+		construct {
+			// Scales
+			default line(radius: 0.3)
+			carpScale(headTop.x + 4, -8)
+			carpScale(headTop.x + 4, -2)
+			carpScale(headTop.x + 4, 4)
+			carpScale(headTop.x + 10, -5)
+			carpScale(headTop.x + 10, 1)
+			carpScale(headTop.x + 16, -2)
+		}
+	}
+}
+
+func carpScale(x: Number, y: Number) {
+	let scaleHeight = 4
+	let scaleWidth = 5
+	line(curve: true, points: [<x, y>,
+	<x: scaleWidth * 0.5 + x, y: scaleHeight * 0.05 + y>,
+	<x: scaleWidth * 0.7 + x, y: scaleHeight * 0.3 + y>,
+	<x: scaleWidth * 0.7 + x, y: scaleHeight * 0.7 + y>,
+	<x: scaleWidth * 0.5 + x, y: scaleHeight * 0.95 + y>,
+	<x: x, y: scaleHeight + y>,
+	], color: 2)
+}
+
+func easeInOut(x: Number): Number {
+	return -1 * (cos(3.1415 * x) - 1) / 2
+}
+
+func perlin(x: Number, y: Number, z: Number): Number {
+   for i in 0 to 255 {
+      let perm = permutation.get(i) ?! 0
+      p.set(i, perm)
+      p.set(256 + i, perm)
+   }
+   // Calculate the unit cube that contains the point
+   let xi = bitAnd(x, 255)
+   let yi = bitAnd(y, 255)
+   let zi = bitAnd(z, 255)
+   // The point relative to the unit cube
+   let xx = x - floor(x)
+   let yy = y - floor(y)
+   let zz = z - floor(z)
+   // Compute fade curves for each of xx, yy, zz
+   let u = fade(xx)
+   let v = fade(yy)
+   let w = fade(zz)
+   // Hash coordinates of the 8 cube corners
+   let a = p.get(xi) ?! 0 + yi
+   let aa = p.get(a) ?! 0 + zi
+   let ab = p.get(a + 1) ?! 0 + zi
+   let b = p.get(xi + 1) ?! 0 + yi
+   let ba = p.get(b) ?! 0 + zi
+   let bb = p.get(b + 1) ?! 0 + zi
+
+   return lerp(w, lerp(v, lerp(u, grad(p.get(aa) ?! 0, xx, yy, zz),
+      grad(p.get(ba) ?! 0, xx - 1, yy, zz)),
+      lerp(u, grad(p.get(ab) ?! 0, xx, yy - 1, zz),
+         grad(p.get(bb) ?! 0, xx - 1, yy - 1, zz))),
+      lerp(v, lerp(u, grad(p.get(aa + 1) ?! 0, xx, yy, zz - 1),
+         grad(p.get(ba + 1) ?! 0, xx - 1, yy, zz - 1)),
+         lerp(u, grad(p.get(ab + 1) ?! 0, xx, yy - 1, zz - 1),
+            grad(p.get(bb + 1) ?! 0, xx - 1, yy - 1, zz - 1))))
+}
+
+func fade(t: Number): Number {
+   return t * t * t * (t * (t * 6 - 15) + 10)
+}
+
+func lerp(t: Number, a: Number, b: Number): Number {
+   return a + t * (b - a)
+}
+
+func grad(hash: Number, x: Number, y: Number, z: Number): Number {
+   let h = bitAnd(hash, 15)
+   let u = h < 8 ? x : y
+   var v: Number
+   if h < 4 {
+      v = y
+   } else if h == 12 or h == 14 {
+      v = x
+   } else {
+      v = z
+   }
+   return (bitAnd(h, 1) == 0 ? u : -1 * u) + (bitAnd(h, 2) == 0 ? v : -1 * v)
+}
+
+func bitAnd(a: Number, b: Number): Number {
+   // Not a real bitwise and, just a replacement as Stelline doesnt support bitwise operations
+   let c = b + 1
+   return (floor(a) % c + c) % c
+}
