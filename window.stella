@@ -2,8 +2,8 @@ palette(secondary: "#9bc5ef", tertiary: "#000")
 palette(secondary: "#318db2", tertiary: "#000")
 
 
-let width = 90
-let height = 135
+let width = 100
+let height = 110
 let z = 0.2
 let a = <width / -2, height / 2, z>
 let b = <width / 2, height / 2, z>
@@ -28,22 +28,37 @@ func window() {
 }
 
 func windowFrame() {
+	var rad = width / 2
+	construct(#window-arch) {
+		arc(a, b, <a.x + rad, a.y + rad>)
+	}
+	rad = width / 4
+	arc(a + <x: rad>, b - <x: rad>, <a.x + width / 2, a.y + rad>)
 	// Border
-	line(#window-border, points: [a, b, c, d, a])
+	construct(#window-border) {
+		line(points: [b, c, d, a, b])
+	}
 	construct {
+		default line(radius: 0.15)
 		// Panes
-		line(points: [<width / 6, height / 2>, <width / 6, height / -2>])
-		line(points: [<width / -6, height / 2>, <width / -6, height / -2>])
-		line(points: [<a.x, height / 4>, <b.x, height / 4>])
-		line(points: [<a.x, height / -4>, <b.x, height / -4>])
-		line(points: [<a.x, 0>, <b.x, 0>])
+		line(points: [<width / 4, height / 2>, <width / 4, height / -2>])
+		line(points: [<0, height / 2 + width / 2>, <0, height / -2>])
+		line(points: [<width / -4, height / 2>, <width / -4, height / -2>])
+		//line(points: [<a.x, height / 4>, <b.x, height / 4>])
+		line(points: [<a.x, height / 6>, <b.x, height / 6>])
+		line(points: [<a.x, height / -6>, <b.x, height / -6>])
 	}
 }
 
 func wall() {
 	let margin = 300
 	let wallColor = 0
-	surface(points: [<a.x - margin, a.y + margin>, <a.x - margin, a.y>, <b.x + margin, b.y>, <b.x + margin, b.y + margin>], color: wallColor)
+	construct {
+		var rad = 20
+		default line(color: 0, radius: rad)
+		arc(a - <x: rad>, b + <x: rad>, <a.x + width / 2, a.y + width / 2 + rad>)
+	}
+	// surface(points: [<a.x - margin, a.y + margin>, <a.x - margin, a.y>, <b.x + margin, b.y>, <b.x + margin, b.y + margin>], color: wallColor)
 	surface(points: [<d.x - margin, d.y - margin>, <d.x - margin, d.y>, <c.x + margin, c.y>, <c.x + margin, c.y - margin>], color: wallColor)
 	surface(points: [<a.x - margin, a.y>, <a.x, a.y>, <d.x, d.y>, <d.x - margin, d.y>], color: wallColor)
 	surface(points: [<b.x + margin, b.y>, <b.x, b.y>, <c.x, c.y>, <c.x + margin, c.y>], color: wallColor)
@@ -51,10 +66,11 @@ func wall() {
 
 func sill() {
 	let dist = 6
-	let sillLength = 5 + dist
+	let sillLength = 6 + dist
 	let sillEndRight = <c.x * scale, c.y * scale, sillLength>
 	let sillEndLeft = <d.x * scale, d.y * scale, sillLength>
 	project(#window-border, z: dist, connect: true)
+	project(#window-arch, z: dist)
 	line(points: [<d.x * scale, d.y * scale, dist>,
 	<c.x * scale, c.y * scale, dist>,
 	sillEndRight,
@@ -62,10 +78,10 @@ func sill() {
 	<d.x * scale, d.y * scale, dist>])
 	construct(#sill-pattern) {
 		line(points: [sillEndLeft,
-		sillEndLeft + <y: -3>,
-		sillEndLeft + <y: -5, z: -4>,
-		sillEndLeft + <y: -8, z: -6>,
-		sillEndLeft + <y: -8.4, z: -10>,
+		sillEndLeft + <y: -3, z: -0.5>,
+		sillEndLeft + <y: -5.5, z: -5>,
+		sillEndLeft + <y: -9, z: -7>,
+		sillEndLeft + <y: -9.6, z: -1 * sillLength + 0.5>,
 		], curve: true)
 	}
 	project(#sill-pattern, x: width, connect: true)
@@ -76,9 +92,9 @@ func sill() {
 func rain(time: Number) {
 	default node(radius: 1)
 	construct(#rain) {
-		let space = 4.4
-		let lines = 22
-		let height = 140
+		let space = 6.5
+		let lines = 14
+		let height = 210
 		let dur = 1750
 		let durMod = 200
 		let modOne = 1 - time % (dur - durMod) / (dur - durMod)
@@ -92,8 +108,8 @@ func rain(time: Number) {
 			} else if (i % 7 == 0) {
 				mod = modThree
 			}
-			let a = <i * space + 16, height / -2, z>
-			let b = <i * space + 5, height / 2, z>
+			let a = <i * space + 18, height / -2, z>
+			let b = <i * space - 6, height / 2, z>
 			let yMod = ((mod + 0.714 * (i + lines / 2)) % 1)
 			let color = (1 - yMod) + 2
 			line(points: [a, b], color: color, progressStart: yMod)
@@ -171,7 +187,13 @@ func wind(time: Number) {
 	construct(#koinobori) {
 		let poleHeight = 200
 		construct(#pole) {
-			line(radius: 0.8, points: [<y: -40>, <y: poleHeight>], color: 0.5)
+			default line(radius: 0.35, color: 0.5)
+			let base = <y: -20>
+			line(points: [base, <y: poleHeight>], radius: 0.6)
+			var baseRad = 7
+			circle(base - <x: -1 * baseRad>, base - <z: baseRad>, base - <x: baseRad>)
+			baseRad = 9
+			circle(base - <x: -1 * baseRad, y: 2.5>, base - <z: baseRad, y: 2.5>, base - <x: baseRad, y: 2.5>)
 		}
 		construct(#wheel) {
 			default line(radius: 0.3, color: 0.5)
@@ -213,7 +235,7 @@ func wind(time: Number) {
 		ground(time)
 	}
 	rotate(#koinobori, angle: 20, center: <>)
-	translate(#koinobori, z: -300, y: -100, x: -20)
+	translate(#koinobori, z: -300, y: -80, x: -10)
 }
 
 func ground(time: Number) {
