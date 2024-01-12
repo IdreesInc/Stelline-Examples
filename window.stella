@@ -81,7 +81,7 @@ func sill() {
 		sillEndLeft + <y: -3, z: -0.5>,
 		sillEndLeft + <y: -5.5, z: -5>,
 		sillEndLeft + <y: -9, z: -7>,
-		sillEndLeft + <y: -9.6, z: -1 * sillLength + 0.5>,
+		sillEndLeft + <y: -9.6, z: -sillLength + 0.5>,
 		], curve: true)
 	}
 	project(#sill-pattern, x: width, connect: true)
@@ -191,9 +191,9 @@ func wind(time: Number) {
 			let base = <y: -20>
 			line(points: [base, <y: poleHeight>], radius: 0.6)
 			var baseRad = 7
-			circle(base - <x: -1 * baseRad>, base - <z: baseRad>, base - <x: baseRad>)
+			circle(base - <x: -baseRad>, base - <z: baseRad>, base - <x: baseRad>)
 			baseRad = 9
-			circle(base - <x: -1 * baseRad, y: 2.5>, base - <z: baseRad, y: 2.5>, base - <x: baseRad, y: 2.5>)
+			circle(base - <x: -baseRad, y: 2.5>, base - <z: baseRad, y: 2.5>, base - <x: baseRad, y: 2.5>)
 		}
 		construct(#wheel) {
 			default line(radius: 0.3, color: 0.5)
@@ -203,7 +203,7 @@ func wind(time: Number) {
 				project(z: wheelDist) {
 					circle(<>, <y: wheelRad * 2>, <x: wheelRad, y: wheelRad>)
 					refract(axis: <z: 1>, center: <y: wheelRad>, count: 3) {
-						line(points: [<-1 * wheelRad, y: wheelRad>, <wheelRad, y: wheelRad>], radius: 0.25)
+						line(points: [<-wheelRad, y: wheelRad>, <wheelRad, y: wheelRad>], radius: 0.25)
 					}
 				}
 				line(points: [<y: wheelRad, z: wheelDist>, <y: wheelRad>], radius: 0.5)
@@ -278,14 +278,14 @@ func windsock(time: Number) {
 		default line(radius: 0.1)
 		let stringOffset = 1.5
 		line(points: [<y: stringOffset>, <x: ropeLen, y: mouthRad>])
-		line(points: [<y: -1 * stringOffset>, <x: ropeLen, y: -1 * mouthRad>])
+		line(points: [<y: -stringOffset>, <x: ropeLen, y: -mouthRad>])
 	}
 	let streamerLen = 60
 	let bodyLen = 26
 	construct {
 		default line(radius: 0.2)
-		circle(<x: ropeLen, z: -1 * mouthRad>, <x: ropeLen, z: mouthRad>, <x: ropeLen, y: mouthRad>)
-		circle(<x: ropeLen + bodyLen, z: -1 * mouthRad>, <x: ropeLen + bodyLen, z: mouthRad>, <x: ropeLen + bodyLen, y: mouthRad>)
+		circle(<x: ropeLen, z: -mouthRad>, <x: ropeLen, z: mouthRad>, <x: ropeLen, y: mouthRad>)
+		circle(<x: ropeLen + bodyLen, z: -mouthRad>, <x: ropeLen + bodyLen, z: mouthRad>, <x: ropeLen + bodyLen, y: mouthRad>)
 		let streamerStart = <x: ropeLen + bodyLen, y: mouthRad>
 		refract(center: <>, axis: <1>, count: 7) {
 			let last = node(point: <x: ropeLen + streamerLen, y: mouthRad + easeInOut(time %/ 1400) * -2 + 0.5,
@@ -306,24 +306,24 @@ func koinobori(time: Number) {
 		default line(radius: 0.1)
 		let stringOffset = 1.5
 		line(points: [<y: stringOffset>, <x: ropeLen, y: mouthRad>])
-		line(points: [<y: -1 * stringOffset>, <x: ropeLen, y: -1 * mouthRad>])
+		line(points: [<y: -stringOffset>, <x: ropeLen, y: -mouthRad>])
 	}
 	construct {
 		// Mouth
 		default line(radius: 0.4)
-		circle(<x: ropeLen, z: -1 * mouthRad>, <x: ropeLen, z: mouthRad>, <x: ropeLen, y: mouthRad>)
+		circle(<x: ropeLen, z: -mouthRad>, <x: ropeLen, z: mouthRad>, <x: ropeLen, y: mouthRad>)
 		
 		// Body
 		let headLen = 13
 		let headTop = <x: ropeLen + headLen, y: mouthRad + 2>
-		let headBottom = <x: ropeLen + headLen, y: -1 * mouthRad - 2>
+		let headBottom = <x: ropeLen + headLen, y: -mouthRad - 2>
 		let bodyLen = 23
 		let bodyTop = <x: headTop.x + bodyLen, y: mouthRad - 1>
-		let bodyBottom = <x: headBottom.x + bodyLen, y: -1 * mouthRad + 1>
+		let bodyBottom = <x: headBottom.x + bodyLen, y: -mouthRad + 1>
 		circle(headTop, headBottom, <x: headTop.x, y: headBottom.y + (headTop.y - headBottom.y) / 2, z: (headTop.y - headBottom.y) / 2>)
 		node(point: <headTop.x - headLen / 2.5, headTop.y - headLen / 2.25>, color: 2, radius: 2)
 		line(points: [<x: ropeLen, y: mouthRad>, headTop, bodyTop], curve: true)
-		line(points: [<x: ropeLen, y: -1 * mouthRad>, headBottom, bodyBottom], curve: true)
+		line(points: [<x: ropeLen, y: -mouthRad>, headBottom, bodyBottom], curve: true)
 		let tailLen = 16
 		let tailZ = easeInOut(time %/ 400) * 1.8 - 0.9
 		let tailTop = <x: bodyTop.x + tailLen, y: bodyTop.y + 3, z: tailZ>
@@ -356,7 +356,7 @@ func carpScale(x: Number, y: Number) {
 }
 
 func easeInOut(x: Number): Number {
-	return -1 * (cos(3.1415 * 2 * x) - 1) / 2
+	return -(cos(3.1415 * 2 * x) - 1) / 2
 }
 
 func perlin(x: Number, y: Number, z: Number): Number {
@@ -409,7 +409,7 @@ func grad(hash: Number, x: Number, y: Number, z: Number): Number {
 	} else {
 		v = z
 	}
-	return (bitAnd(h, 1) == 0 ? u : -1 * u) + (bitAnd(h, 2) == 0 ? v : -1 * v)
+	return (bitAnd(h, 1) == 0 ? u : -u) + (bitAnd(h, 2) == 0 ? v : -v)
 }
 
 func bitAnd(a: Number, b: Number): Number {
