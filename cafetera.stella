@@ -1,7 +1,7 @@
 palette("#C38154", "#5e3327", "#FFC26F")
 form {
 	let end = easeInOut(@time % 5000 / 5000 * 2)
-	construct(#cafetera) {
+	group(#cafetera) {
 		let nodeRad = 0.07
 		let lineRad = 0.03
 		default node(radius: nodeRad)

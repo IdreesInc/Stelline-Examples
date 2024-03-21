@@ -17,7 +17,7 @@ form {
 }
 
 func window() {
-	construct(#window) {
+	group(#window) {
 		default line(radius: 0.2)
 		windowFrame()
 		sill()
@@ -47,7 +47,7 @@ func sill() {
 	sillEndRight,
 	sillEndLeft,
 	<d.x * scale, d.y * scale, dist>])
-	construct(#sill-pattern) {
+	group(#sill-pattern) {
 		line(points: [sillEndLeft,
 		sillEndLeft + <y: -3>,
 		sillEndLeft + <y: -5, z: -4>,
@@ -92,7 +92,7 @@ func waves(time: Number) {
 
 func rain(time: Number) {
 	default node(radius: 1)
-	construct(#rain) {
+	group(#rain) {
 		let space = 4.4
 		let lines = 22
 		let height = 140

@@ -19,12 +19,12 @@ let permutation = [151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233
    222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180]
 
 form {
-	construct(#koinobori) {
+	group(#koinobori) {
 		let poleHeight = 200
-		construct(#pole) {
+		group(#pole) {
 			line(radius: 0.7, points: [<y: 0>, <y: poleHeight>])
 		}
-		construct(#wheel) {
+		group(#wheel) {
 			default line(radius: 0.3)
 			let wheelRad = 5
 			let wheelDist = 4
@@ -68,7 +68,7 @@ form {
 }
 
 func ground(time: Number) {
-	construct(#ground) {
+	group(#ground) {
 		default line(radius: 0.2, color: 0.5)
 		let numOfLines = 15
 		let length = 1100
@@ -101,7 +101,7 @@ func ground(time: Number) {
 func windsock(time: Number) {
 	let mouthRad = 6
 	let ropeLen = 11
-	construct {
+	group {
 		// Rope
 		default line(radius: 0.1)
 		let stringOffset = 1.5
@@ -110,7 +110,7 @@ func windsock(time: Number) {
 	}
 	let streamerLen = 60
 	let bodyLen = 26
-	construct {
+	group {
 		default line(radius: 0.2)
 		circle(<x: ropeLen, z: -1 * mouthRad>, <x: ropeLen, z: mouthRad>, <x: ropeLen, y: mouthRad>)
 		circle(<x: ropeLen + bodyLen, z: -1 * mouthRad>, <x: ropeLen + bodyLen, z: mouthRad>, <x: ropeLen + bodyLen, y: mouthRad>)
@@ -129,14 +129,14 @@ func windsock(time: Number) {
 func koinobori(time: Number) {
 	let mouthRad = 8
 	let ropeLen = 11
-	construct {
+	group {
 		// Rope
 		default line(radius: 0.1)
 		let stringOffset = 1.5
 		line(points: [<y: stringOffset>, <x: ropeLen, y: mouthRad>])
 		line(points: [<y: -1 * stringOffset>, <x: ropeLen, y: -1 * mouthRad>])
 	}
-	construct {
+	group {
 		// Mouth
 		default line(radius: 0.4)
 		circle(<x: ropeLen, z: -1 * mouthRad>, <x: ropeLen, z: mouthRad>, <x: ropeLen, y: mouthRad>)
@@ -158,7 +158,7 @@ func koinobori(time: Number) {
 		let tailBottom = <x: bodyBottom.x + tailLen, y: bodyBottom.y - 2, z: tailZ * -1>
 		let tailMiddle = <x: tailTop.x - tailLen / 3, y: tailBottom.y + (tailTop.y - tailBottom.y) / 2, z: 0>
 		line(points: [bodyTop, tailTop, tailMiddle, tailBottom, bodyBottom], curve: true)
-		construct {
+		group {
 			// Scales
 			default line(radius: 0.3)
 			carpScale(headTop.x + 4, -8)

@@ -19,7 +19,7 @@ form {
 }
 
 func window() {
-	construct(#window) {
+	group(#window) {
 		default line(radius: 0.2)
 		windowFrame()
 		sill()
@@ -29,16 +29,16 @@ func window() {
 
 func windowFrame() {
 	var rad = width / 2
-	construct(#window-arch) {
+	group(#window-arch) {
 		arc(a, b, <a.x + rad, a.y + rad>)
 	}
 	rad = width / 4
 	arc(a + <x: rad>, b - <x: rad>, <a.x + width / 2, a.y + rad>)
 	// Border
-	construct(#window-border) {
+	group(#window-border) {
 		line(points: [b, c, d, a, b])
 	}
-	construct {
+	group {
 		default line(radius: 0.15)
 		// Panes
 		line(points: [<width / 4, height / 2>, <width / 4, height / -2>])
@@ -53,7 +53,7 @@ func windowFrame() {
 func wall() {
 	let margin = 300
 	let wallColor = 0
-	construct {
+	group {
 		var rad = 20
 		default line(color: 0, radius: rad)
 		arc(a - <x: rad>, b + <x: rad>, <a.x + width / 2, a.y + width / 2 + rad>)
@@ -76,7 +76,7 @@ func sill() {
 	sillEndRight,
 	sillEndLeft,
 	<d.x * scale, d.y * scale, dist>])
-	construct(#sill-pattern) {
+	group(#sill-pattern) {
 		line(points: [sillEndLeft,
 		sillEndLeft + <y: -3, z: -0.5>,
 		sillEndLeft + <y: -5.5, z: -5>,
@@ -91,7 +91,7 @@ func sill() {
 
 func rain(time: Number) {
 	default node(radius: 1)
-	construct(#rain) {
+	group(#rain) {
 		let space = 6.5
 		let lines = 14
 		let height = 210
@@ -184,9 +184,9 @@ let p = [151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225,
 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180]
 
 func wind(time: Number) {
-	construct(#koinobori) {
+	group(#koinobori) {
 		let poleHeight = 200
-		construct(#pole) {
+		group(#pole) {
 			default line(radius: 0.35, color: 0.5)
 			let base = <y: -20>
 			line(points: [base, <y: poleHeight>], radius: 0.6)
@@ -195,7 +195,7 @@ func wind(time: Number) {
 			baseRad = 9
 			circle(base - <x: -baseRad, y: 2.5>, base - <z: baseRad, y: 2.5>, base - <x: baseRad, y: 2.5>)
 		}
-		construct(#wheel) {
+		group(#wheel) {
 			default line(radius: 0.3, color: 0.5)
 			let wheelRad = 5
 			let wheelDist = 4
@@ -239,7 +239,7 @@ func wind(time: Number) {
 }
 
 func ground(time: Number) {
-	construct(#ground) {
+	group(#ground) {
 		default line(radius: 0.3, color: 1.6)
 		let numOfLines = 15
 		let length = 1100
@@ -273,7 +273,7 @@ func ground(time: Number) {
 func windsock(time: Number) {
 	let mouthRad = 6
 	let ropeLen = 11
-	construct {
+	group {
 		// Rope
 		default line(radius: 0.1)
 		let stringOffset = 1.5
@@ -282,7 +282,7 @@ func windsock(time: Number) {
 	}
 	let streamerLen = 60
 	let bodyLen = 26
-	construct {
+	group {
 		default line(radius: 0.2)
 		circle(<x: ropeLen, z: -mouthRad>, <x: ropeLen, z: mouthRad>, <x: ropeLen, y: mouthRad>)
 		circle(<x: ropeLen + bodyLen, z: -mouthRad>, <x: ropeLen + bodyLen, z: mouthRad>, <x: ropeLen + bodyLen, y: mouthRad>)
@@ -301,14 +301,14 @@ func windsock(time: Number) {
 func koinobori(time: Number) {
 	let mouthRad = 8
 	let ropeLen = 11
-	construct {
+	group {
 		// Rope
 		default line(radius: 0.1)
 		let stringOffset = 1.5
 		line(points: [<y: stringOffset>, <x: ropeLen, y: mouthRad>])
 		line(points: [<y: -stringOffset>, <x: ropeLen, y: -mouthRad>])
 	}
-	construct {
+	group {
 		// Mouth
 		default line(radius: 0.4)
 		circle(<x: ropeLen, z: -mouthRad>, <x: ropeLen, z: mouthRad>, <x: ropeLen, y: mouthRad>)
@@ -330,7 +330,7 @@ func koinobori(time: Number) {
 		let tailBottom = <x: bodyBottom.x + tailLen, y: bodyBottom.y - 2, z: tailZ * -1>
 		let tailMiddle = <x: tailTop.x - tailLen / 3, y: tailBottom.y + (tailTop.y - tailBottom.y) / 2, z: 0>
 		line(points: [bodyTop, tailTop, tailMiddle, tailBottom, bodyBottom], curve: true)
-		construct {
+		group {
 			// Scales
 			default line(radius: 0.3)
 			carpScale(headTop.x + 4, -8)
