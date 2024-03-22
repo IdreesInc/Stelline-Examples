@@ -30,10 +30,10 @@ func window() {
 func windowFrame() {
 	var rad = width / 2
 	group(#window-arch) {
-		arc(a, b, <a.x + rad, a.y + rad>)
+		arcFromPoints(a, b, <a.x + rad, a.y + rad>)
 	}
 	rad = width / 4
-	arc(a + <x: rad>, b - <x: rad>, <a.x + width / 2, a.y + rad>)
+	arcFromPoints(a + <x: rad>, b - <x: rad>, <a.x + width / 2, a.y + rad>)
 	// Border
 	group(#window-border) {
 		line(points: [b, c, d, a, b])
@@ -56,7 +56,7 @@ func wall() {
 	group {
 		var rad = 20
 		default line(color: 0, radius: rad)
-		arc(a - <x: rad>, b + <x: rad>, <a.x + width / 2, a.y + width / 2 + rad>)
+		arcFromPoints(a - <x: rad>, b + <x: rad>, <a.x + width / 2, a.y + width / 2 + rad>)
 	}
 	// surface(points: [<a.x - margin, a.y + margin>, <a.x - margin, a.y>, <b.x + margin, b.y>, <b.x + margin, b.y + margin>], color: wallColor)
 	surface(points: [<d.x - margin, d.y - margin>, <d.x - margin, d.y>, <c.x + margin, c.y>, <c.x + margin, c.y - margin>], color: wallColor)
@@ -191,9 +191,9 @@ func wind(time: Number) {
 			let base = <y: -20>
 			line(points: [base, <y: poleHeight>], radius: 0.6)
 			var baseRad = 7
-			circle(base - <x: -baseRad>, base - <z: baseRad>, base - <x: baseRad>)
+			circleFromPoints(base - <x: -baseRad>, base - <z: baseRad>, base - <x: baseRad>)
 			baseRad = 9
-			circle(base - <x: -baseRad, y: 2.5>, base - <z: baseRad, y: 2.5>, base - <x: baseRad, y: 2.5>)
+			circleFromPoints(base - <x: -baseRad, y: 2.5>, base - <z: baseRad, y: 2.5>, base - <x: baseRad, y: 2.5>)
 		}
 		group(#wheel) {
 			default line(radius: 0.3, color: 0.5)
@@ -201,7 +201,7 @@ func wind(time: Number) {
 			let wheelDist = 4
 			translate(y: poleHeight - wheelRad, z: wheelDist / -2) {
 				project(z: wheelDist) {
-					circle(<>, <y: wheelRad * 2>, <x: wheelRad, y: wheelRad>)
+					circleFromPoints(<>, <y: wheelRad * 2>, <x: wheelRad, y: wheelRad>)
 					refract(axis: <z: 1>, center: <y: wheelRad>, count: 3) {
 						line(points: [<-wheelRad, y: wheelRad>, <wheelRad, y: wheelRad>], radius: 0.25)
 					}
@@ -284,8 +284,8 @@ func windsock(time: Number) {
 	let bodyLen = 26
 	group {
 		default line(radius: 0.2)
-		circle(<x: ropeLen, z: -mouthRad>, <x: ropeLen, z: mouthRad>, <x: ropeLen, y: mouthRad>)
-		circle(<x: ropeLen + bodyLen, z: -mouthRad>, <x: ropeLen + bodyLen, z: mouthRad>, <x: ropeLen + bodyLen, y: mouthRad>)
+		circleFromPoints(<x: ropeLen, z: -mouthRad>, <x: ropeLen, z: mouthRad>, <x: ropeLen, y: mouthRad>)
+		circleFromPoints(<x: ropeLen + bodyLen, z: -mouthRad>, <x: ropeLen + bodyLen, z: mouthRad>, <x: ropeLen + bodyLen, y: mouthRad>)
 		let streamerStart = <x: ropeLen + bodyLen, y: mouthRad>
 		refract(center: <>, axis: <1>, count: 7) {
 			let last = node(point: <x: ropeLen + streamerLen, y: mouthRad + easeInOut(time %/ 1400) * -2 + 0.5,
@@ -311,7 +311,7 @@ func koinobori(time: Number) {
 	group {
 		// Mouth
 		default line(radius: 0.4)
-		circle(<x: ropeLen, z: -mouthRad>, <x: ropeLen, z: mouthRad>, <x: ropeLen, y: mouthRad>)
+		circleFromPoints(<x: ropeLen, z: -mouthRad>, <x: ropeLen, z: mouthRad>, <x: ropeLen, y: mouthRad>)
 		
 		// Body
 		let headLen = 13
@@ -320,7 +320,7 @@ func koinobori(time: Number) {
 		let bodyLen = 23
 		let bodyTop = <x: headTop.x + bodyLen, y: mouthRad - 1>
 		let bodyBottom = <x: headBottom.x + bodyLen, y: -mouthRad + 1>
-		circle(headTop, headBottom, <x: headTop.x, y: headBottom.y + (headTop.y - headBottom.y) / 2, z: (headTop.y - headBottom.y) / 2>)
+		circleFromPoints(headTop, headBottom, <x: headTop.x, y: headBottom.y + (headTop.y - headBottom.y) / 2, z: (headTop.y - headBottom.y) / 2>)
 		node(point: <headTop.x - headLen / 2.5, headTop.y - headLen / 2.25>, color: 2, radius: 2)
 		line(points: [<x: ropeLen, y: mouthRad>, headTop, bodyTop], curve: true)
 		line(points: [<x: ropeLen, y: -mouthRad>, headBottom, bodyBottom], curve: true)
