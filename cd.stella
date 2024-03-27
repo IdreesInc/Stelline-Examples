@@ -1,0 +1,26 @@
+form {
+	default line(radius: 0.1)
+	let innerRad = 16
+	let outerRad = 44
+	let count = 120
+	let raised = (1 - @time %/ 6000) * count
+	for i in 0 to count {
+		let mod = i / count * 3.1415 * 2
+		var z = 0
+		var dist = abs(i - raised)
+		if dist > count / 2 {
+			dist = count - dist
+		}
+		var color = 0.6
+		var radius = 0.1
+		let space = 12
+		if dist < space {
+			z = (cos(dist / space * 3.1415) + 1) / 4
+			color = z * 3 + 0.6
+			radius = z / 4 + 0.1
+		}
+		let start = <cos(mod), sin(mod)> * innerRad
+		let end = <cos(mod), sin(mod), z> * outerRad
+		line(points: [start, end], color: color, radius: radius)
+	}
+}
