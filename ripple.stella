@@ -1,0 +1,32 @@
+form {
+	let count = 80
+	let spacing = 2
+	let rippleDist = count * spacing * (@time %/ 2000)
+	let rippleRange = 20
+	for x in count / -2 to count / 2 {
+		for y in count / -2 to count / 2 {
+			let point = <x, y> * spacing
+			let distance = dist(<>, point)
+			var rad = 0.2
+			var color = 1
+			var z = 0
+			if abs(distance - rippleDist) <= rippleRange {
+				let mod = sin((abs(distance - rippleDist) / rippleRange) * 3.1415)
+				rad = 0.2 + 0.2 * mod
+				color = color + mod
+				z = mod * 8
+			}
+			node(point: point + <z: z>, radius: rad, color: color)
+		}
+	}
+	rotate(center: <>, angle: -45, axis: <x: 1>)
+}
+
+
+func dist(a: Point, b: Point): Number {
+	let one = a.x - b.x
+	let two = a.y - b.y
+	return sqrt(one * one + two * two)
+}
+
+palette("#bd2259", "#dba17c", "#1fd6a2")
