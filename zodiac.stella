@@ -1,333 +1,334 @@
 // Inspiration: https://dribbble.com/shots/21976509-Zodiac-Signs
-
-palette("#0d0e38", "#ffffff", "#ffb41d", "#2cb1e6")
-
-let unitCircle = [<0, 1>,
-<1/2, sqrt(3)/2>,
-<sqrt(3)/2, 1/2>,
-<1, 0>,
-<sqrt(3)/2, -1/2>,
-<1/2, sqrt(3)/-2>,
-<0, -1>,
-<-1/2, sqrt(3)/-2>,
-<sqrt(3)/-2, -1/2>,
-<-1, 0>,
-<sqrt(3)/-2, 1/2>,
-<-1/2, sqrt(3)/2>]
-
-form {
-	default line(radius: 0.1, color: 2)
-	circle(<>, 30)
-	let outer = circle(<>, 60)
-	line(outer, radius: 0.3)
-	sun(@time)
-	separators(@time)
-	stars(@time)
-	zodiac()
-	if @time % 5000 < 2500 {
-		rotate(center: <0, 0, 0>, angle: easeInOut(@time %/ 2500) * -45 + 45 / 2)
-	} else {
-		rotate(center: <0, 0, 0>, angle: easeInOut(@time %/ 2500) * 45 - 45 / 2)
-	}
-}
-
-func sun(time: Number) {
-	node(radius: 6, color: 2)
-	let raydius = 9
-	let peak = <0, raydius>
-	let dist = 5
-	group(#sun) {
-		line(points: [<-1 * dist>, peak, <dist>], radius: 0.15)
-		refract(center: <>, count: 8, axis: <z: 1>)
-	}
-}
-
-func separators(time: Number) {
-	group {
-		for i in 0 to 8 {
-			let innerRad = 15
-			let outerRad = 35
-			let mod = i / 8 * 3.1415 * 2
-			let start = <cos(mod), sin(mod)> * innerRad
-			let end = <cos(mod), sin(mod)> * outerRad
-			line(points: [start, end])
-		}
-		rotate(angle: time %/ 60000 * -360, axis: <z: 1>)
-	}
-}
-
-func stars(time: Number) {
-	group {
-		let starSpace = 200
-		for i in 0 to 50 {
-			star(<rand(i * 100) * starSpace - starSpace / 2,
-			rand(i * 1000) * starSpace - starSpace / 2,
-			i - 15>, size: 0.5 + rand(i * 300), time: time)
+constellation Zodiac {
+	palette("#0d0e38", "#ffffff", "#ffb41d", "#2cb1e6")
+	
+	let unitCircle = [<0, 1>,
+	<1/2, sqrt(3)/2>,
+	<sqrt(3)/2, 1/2>,
+	<1, 0>,
+	<sqrt(3)/2, -1/2>,
+	<1/2, sqrt(3)/-2>,
+	<0, -1>,
+	<-1/2, sqrt(3)/-2>,
+	<sqrt(3)/-2, -1/2>,
+	<-1, 0>,
+	<sqrt(3)/-2, 1/2>,
+	<-1/2, sqrt(3)/2>]
+	
+	form {
+		default line(radius: 0.1, color: 2)
+		circle(<>, 30)
+		let outer = circle(<>, 60)
+		line(outer, radius: 0.3)
+		sun(@time)
+		separators(@time)
+		stars(@time)
+		zodiac()
+		if @time % 5000 < 2500 {
+			rotate(center: <0, 0, 0>, angle: easeInOut(@time %/ 2500) * -45 + 45 / 2)
+		} else {
+			rotate(center: <0, 0, 0>, angle: easeInOut(@time %/ 2500) * 45 - 45 / 2)
 		}
 	}
-}
-
-func star(center: Point = <>, size: Number = 1, time: Number) {
-	group {
-		let inner = 0.35
-		let outer = 1
-		let points = [<y: outer>,
-		<inner, inner>,
-		<x: outer>,
-		<inner, -1 * inner>,
-		<y: -1 * outer>,
-		<-1 * inner, -1 * inner>,
-		<x: -1 * outer>,
-		<-1 * inner, inner>,
-		]
-		var color = 3
-		if rand(center.z) < 0.2 {
-			color = 2
+	
+	func sun(time: Number) {
+		node(radius: 6, color: 2)
+		let raydius = 9
+		let peak = <0, raydius>
+		let dist = 5
+		group(#sun) {
+			line(points: [<-1 * dist>, peak, <dist>], radius: 0.15)
+			refract(center: <>, count: 8, axis: <z: 1>)
 		}
-		line(points: points, curve: true, loop: true, color: color)
-		translate(x: center.x, y: center.y, z: center.z)
-		//follow(center: center)
-		scale(center: center, amount: size)
-		rotate(angle: (time + 100 * center.z) %/ 1500 * 360)
 	}
-}
-
-func zodiac() {
-	group {
-		default node(radius: 0.6)
-		default line(color: 1)
-		aries((unitCircle.get(0) ?! <>) * 45)
-		taurus((unitCircle.get(1) ?! <>) * 45)
-		gemini((unitCircle.get(2) ?! <>) * 45)
-		cancer((unitCircle.get(3) ?! <>) * 45)
-		leo((unitCircle.get(4) ?! <>) * 45)
-		virgo((unitCircle.get(5) ?! <>) * 45)
-		libra((unitCircle.get(6) ?! <>) * 45)
-		scorpio((unitCircle.get(7) ?! <>) * 45)
-		sagittarius((unitCircle.get(8) ?! <>) * 45)
-		capricorn((unitCircle.get(9) ?! <>) * 45)
-		aquarius((unitCircle.get(10) ?! <>) * 45)
-		pisces((unitCircle.get(11) ?! <>) * 45)
+	
+	func separators(time: Number) {
+		group {
+			for i in 0 to 8 {
+				let innerRad = 15
+				let outerRad = 35
+				let mod = i / 8 * 3.1415 * 2
+				let start = <cos(mod), sin(mod)> * innerRad
+				let end = <cos(mod), sin(mod)> * outerRad
+				line(points: [start, end])
+			}
+			rotate(angle: time %/ 60000 * -360, axis: <z: 1>)
+		}
 	}
-}
-
-
-func aries(center: Point) {
-	group {
-		let a = node(point: center - <x: 8>)
-		let b = node(point: center + <x: 6, y: -2>)
-		let c = node(point: center + <x: 9, y: -5>)
-		let d = node(point: center + <x: 10, y: -8>)
-		line(points: [a, b, c, d])
-		translate(y: 3)
+	
+	func stars(time: Number) {
+		group {
+			let starSpace = 200
+			for i in 0 to 50 {
+				star(<rand(i * 100) * starSpace - starSpace / 2,
+				rand(i * 1000) * starSpace - starSpace / 2,
+				i - 15>, size: 0.5 + rand(i * 300), time: time)
+			}
+		}
 	}
-}
-
-
-func taurus(center: Point) {
-	group {
-		let a = node(point: center + <x: -2, y: 4>)
-		let b = node(point: center + <y: -6>)
-		let c = node(point: center + <x: 1, y: -9>)
-		let d = node(point: center + <x: 3.5, y: -7>)
-		let e = node(point: center + <x: 4.5, y: -3>)
-		let f = node(point: center + <x: 4.5, y: 5>)
-		line(points: [a, b, c, d, e, f])
-		translate(x: -1, y: 2)
-		scale(amount: 1.4)
+	
+	func star(center: Point = <>, size: Number = 1, time: Number) {
+		group {
+			let inner = 0.35
+			let outer = 1
+			let points = [<y: outer>,
+			<inner, inner>,
+			<x: outer>,
+			<inner, -1 * inner>,
+			<y: -1 * outer>,
+			<-1 * inner, -1 * inner>,
+			<x: -1 * outer>,
+			<-1 * inner, inner>,
+			]
+			var color = 3
+			if rand(center.z) < 0.2 {
+				color = 2
+			}
+			line(points: points, curve: true, loop: true, color: color)
+			translate(x: center.x, y: center.y, z: center.z)
+			//follow(center: center)
+			scale(center: center, amount: size)
+			rotate(angle: (time + 100 * center.z) %/ 1500 * 360)
+		}
 	}
-}
-
-func gemini(center: Point) {
-	group {
-		let a = node(point: center)
-		let b = node(point: center + <x: -4, y: 5>)
-		let c = node(point: center + <x: -5, y: 8>)
-		let d = node(point: center + <x: -0.5, y: 9>)
-		let e = node(point: center + <x: 3, y: 3>)
-		let f = node(point: center + <x: 4.5, y: 1>)
-		line(points: [a, b, c, d, e, f])
-		translate(x: 2, y: -4)
-		scale(amount: 1.6)
+	
+	func zodiac() {
+		group {
+			default node(radius: 0.6)
+			default line(color: 1)
+			aries((unitCircle.get(0) ?! <>) * 45)
+			taurus((unitCircle.get(1) ?! <>) * 45)
+			gemini((unitCircle.get(2) ?! <>) * 45)
+			cancer((unitCircle.get(3) ?! <>) * 45)
+			leo((unitCircle.get(4) ?! <>) * 45)
+			virgo((unitCircle.get(5) ?! <>) * 45)
+			libra((unitCircle.get(6) ?! <>) * 45)
+			scorpio((unitCircle.get(7) ?! <>) * 45)
+			sagittarius((unitCircle.get(8) ?! <>) * 45)
+			capricorn((unitCircle.get(9) ?! <>) * 45)
+			aquarius((unitCircle.get(10) ?! <>) * 45)
+			pisces((unitCircle.get(11) ?! <>) * 45)
+		}
 	}
-}
-
-func cancer(center: Point) {
-	group {
-		let a = node(point: center)
-		let b = node(point: center + <y: 4>)
-		let c = node(point: center + <x: -5, y: -6>)
-		let d = node(point: center + <x: 7, y: -8>)
-		let e = node(point: center + <x: -1, y: 10>)
-		line(points: [a, b])
-		line(points: [a, c])
-		line(points: [a, d])
-		line(points: [b, e])
+	
+	
+	func aries(center: Point) {
+		group {
+			let a = node(point: center - <x: 8>)
+			let b = node(point: center + <x: 6, y: -2>)
+			let c = node(point: center + <x: 9, y: -5>)
+			let d = node(point: center + <x: 10, y: -8>)
+			line(points: [a, b, c, d])
+			translate(y: 3)
+		}
 	}
-}
-
-
-func leo(center: Point) {
-	group {
-		let a = node(point: center + <4, 1>)
-		let b = node(point: center + <-3>)
-		let c = node(point: center + <-8, -4>)
-		let d = node(point: center + <-2.5, -3.5>)
-		let e = node(point: center + <7, -3.5>)
-		let f = node(point: center + <7, -0.5>)
-		let g = node(point: center + <5, 4>)
-		let h = node(point: center + <8, 6>)
-		let i = node(point: center + <10, 4>)
-		line(points: [a, b, c, d, e, f, a, g, h, i])
+	
+	
+	func taurus(center: Point) {
+		group {
+			let a = node(point: center + <x: -2, y: 4>)
+			let b = node(point: center + <y: -6>)
+			let c = node(point: center + <x: 1, y: -9>)
+			let d = node(point: center + <x: 3.5, y: -7>)
+			let e = node(point: center + <x: 4.5, y: -3>)
+			let f = node(point: center + <x: 4.5, y: 5>)
+			line(points: [a, b, c, d, e, f])
+			translate(x: -1, y: 2)
+			scale(amount: 1.4)
+		}
 	}
-}
-
-
-func virgo(center: Point) {
-	group {
-		let a = node(point: center + <-9, -6>)
-		let b = node(point: center + <-6, -2>)
-		let c = node(point: center + <-1, 1>)
-		let d = node(point: center + <3, 2>)
-		let e = node(point: center + <8, 4>)
-		line(points: [a, b, c, d, e])
-		let f = node(point: center + <-13, 5>)
-		let g = node(point: center + <-9, 2>)
-		line(points: [f, g, b])
-		let h = node(point: center + <-2, 10>)
-		let i = node(point: center + <-2, 5>)
-		line(points: [h, i, c])
-		translate(x: 1, y: -3)
-		scale(amount: 0.98)
-		rotate(axis: <z: 1>, angle: 180)
+	
+	func gemini(center: Point) {
+		group {
+			let a = node(point: center)
+			let b = node(point: center + <x: -4, y: 5>)
+			let c = node(point: center + <x: -5, y: 8>)
+			let d = node(point: center + <x: -0.5, y: 9>)
+			let e = node(point: center + <x: 3, y: 3>)
+			let f = node(point: center + <x: 4.5, y: 1>)
+			line(points: [a, b, c, d, e, f])
+			translate(x: 2, y: -4)
+			scale(amount: 1.6)
+		}
 	}
-}
-
-func libra(center: Point) {
-	group {
-		let a = node(point: center + <-9, -8>)
-		let b = node(point: center + <-7, 1>)
-		let c = node(point: center + <-2, 4>)
-		let d = node(point: center + <1, 0>)
-		let e = node(point: center + <-2, -7>)
-		line(points: [a, b, c, d, e])
-		line(points: [b, d])
-		translate(x: 1, y: 1)
-		scale(amount: 1.1)
+	
+	func cancer(center: Point) {
+		group {
+			let a = node(point: center)
+			let b = node(point: center + <y: 4>)
+			let c = node(point: center + <x: -5, y: -6>)
+			let d = node(point: center + <x: 7, y: -8>)
+			let e = node(point: center + <x: -1, y: 10>)
+			line(points: [a, b])
+			line(points: [a, c])
+			line(points: [a, d])
+			line(points: [b, e])
+		}
 	}
-}
-
-func scorpio(center: Point) {
-	group {
-		let a = node(point: center + <-7, -6>)
-		let b = node(point: center + <-10, -9>)
-		let c = node(point: center + <-7, -12>)
-		let d = node(point: center + <-2, -11>)
-		let e = node(point: center + <-1, -4>)
-		let f = node(point: center + <3, 2>)
-		let g = node(point: center + <6, 3.5>)
-		line(points: [a, b, c, d, e, f, g])
-		let h = node(point: center + <10, 6.5>)
-		let i = node(point: center + <10, 4>)
-		let j = node(point: center + <10, 1.5>)
-		line(points: [h, g, i])
-		line(points: [g, j])
-		translate(y: 1)
-		scale(amount: 0.9)
-		rotate(axis: <z: 1>, angle: -15)
+	
+	
+	func leo(center: Point) {
+		group {
+			let a = node(point: center + <4, 1>)
+			let b = node(point: center + <-3>)
+			let c = node(point: center + <-8, -4>)
+			let d = node(point: center + <-2.5, -3.5>)
+			let e = node(point: center + <7, -3.5>)
+			let f = node(point: center + <7, -0.5>)
+			let g = node(point: center + <5, 4>)
+			let h = node(point: center + <8, 6>)
+			let i = node(point: center + <10, 4>)
+			line(points: [a, b, c, d, e, f, a, g, h, i])
+		}
 	}
-}
-
-func sagittarius(center: Point) {
-	group {
-		let a = node(point: center + <-2, -10>)
-		let b = node(point: center + <-5, -11>)
-		let c = node(point: center + <-1, -12>)
-		line(points: [a, b, c])
-		let d = node(point: center + <-7, -2>)
-		let e = node(point: center + <-4, 1>)
-		let f = node(point: center - <1>)
-		let g = node(point: center + <0, -2>)
-		let h = node(point: center + <1.5, 1>)
-		let i = node(point: center + <3, -1>)
-		line(points: [b, d, e, f, g, i, h, f])
-		let j = node(point: center + <-2, 5>)
-		let k = node(point: center + <-3, 7>)
-		line(points: [f, j, k])
-		let l = node(point: center + <7, 4>)
-		let m = node(point: center + <6, 0>)
-		let n = node(point: center + <7, -3>)
-		let o = node(point: center + <6, -6>)
-		let p = node(point: center + <8, -8>)
-		let q = node(point: center + <9, -3>)
-		line(points:[l, m, n, o, p])
-		line(points:[i, m])
-		line(points:[n, q])
+	
+	
+	func virgo(center: Point) {
+		group {
+			let a = node(point: center + <-9, -6>)
+			let b = node(point: center + <-6, -2>)
+			let c = node(point: center + <-1, 1>)
+			let d = node(point: center + <3, 2>)
+			let e = node(point: center + <8, 4>)
+			line(points: [a, b, c, d, e])
+			let f = node(point: center + <-13, 5>)
+			let g = node(point: center + <-9, 2>)
+			line(points: [f, g, b])
+			let h = node(point: center + <-2, 10>)
+			let i = node(point: center + <-2, 5>)
+			line(points: [h, i, c])
+			translate(x: 1, y: -3)
+			scale(amount: 0.98)
+			rotate(axis: <z: 1>, angle: 180)
+		}
 	}
-}
-
-func capricorn(center: Point) {
-	group {
-		let a = node(point: center + <-7, 5>)
-		let b = node(point: center + <-4, 4>)
-		let c = node(point: center + <0, 3>)
-		let d = node(point: center + <7, 5>)
-		let e = node(point: center + <8, 7>)
-		let f = node(point: center + <2, -4>)
-		let g = node(point: center + <0, -5>)
-		let h = node(point: center + <0, -5>)
-		let i = node(point: center + <-5, 0>)
-		line(points: [a, b, c, d, f, g, h, i, a])
-		line(points: [e, f])
-		scale(amount: 1.1)
+	
+	func libra(center: Point) {
+		group {
+			let a = node(point: center + <-9, -8>)
+			let b = node(point: center + <-7, 1>)
+			let c = node(point: center + <-2, 4>)
+			let d = node(point: center + <1, 0>)
+			let e = node(point: center + <-2, -7>)
+			line(points: [a, b, c, d, e])
+			line(points: [b, d])
+			translate(x: 1, y: 1)
+			scale(amount: 1.1)
+		}
 	}
-}
-
-func aquarius(center: Point) {
-	group {
-		let a = node(point: center + <7, 8>)
-		let b = node(point: center + <2, 4>)
-		let c = node(point: center + <-3, 0>)
-		let d = node(point: center + <-3, -2.5>)
-		let e = node(point: center + <-5, -3>)
-		let f = node(point: center + <-6, -5>)
-		let g = node(point: center + <-2, -9>)
-		let h = node(point: center + <-1, -7>)
-		let i = node(point: center + <2, -7>)
-		let j = node(point: center + <4, -9>)
-		line(points: [a, b, c, d, e, f, g, h, i, j])
-		let k = node(point: center + <2, -2>)
-		let l = node(point: center + <6, -2>)
-		line(points: [c, k, l])
-		translate(x: -2, y: 1)
-		rotate(axis: <z: 1>, angle: 180)
+	
+	func scorpio(center: Point) {
+		group {
+			let a = node(point: center + <-7, -6>)
+			let b = node(point: center + <-10, -9>)
+			let c = node(point: center + <-7, -12>)
+			let d = node(point: center + <-2, -11>)
+			let e = node(point: center + <-1, -4>)
+			let f = node(point: center + <3, 2>)
+			let g = node(point: center + <6, 3.5>)
+			line(points: [a, b, c, d, e, f, g])
+			let h = node(point: center + <10, 6.5>)
+			let i = node(point: center + <10, 4>)
+			let j = node(point: center + <10, 1.5>)
+			line(points: [h, g, i])
+			line(points: [g, j])
+			translate(y: 1)
+			scale(amount: 0.9)
+			rotate(axis: <z: 1>, angle: -15)
+		}
 	}
-}
-
-func pisces(center: Point) {
-	group {
-		let a = node(point: center + <-7, 7>)
-		let b = node(point: center + <-6, 5>)
-		// let c = node(point: center + <-4, 4>)
-		let d = node(point: center + <-2, 3>)
-		let e = node(point: center + <-1, 0>)
-		//let f = node(point: center + <0, -3>)
-		let g = node(point: center + <0.5, -6>)
-		let h = node(point: center + <4, 0>)
-		let i = node(point: center + <6, 1.5>)
-		//let j = node(point: center + <9, 4>)
-		let k = node(point: center + <9, 4>)
-		let l = node(point: center + <11, 5>)
-		let m = node(point: center + <13, 4>)
-		let n = node(point: center + <15, 6>)
-		let o = node(point: center + <15, 8>)
-		let p = node(point: center + <12.5, 7.5>)
-		line(points: [a, b, d, e, g, h, i, k, l, m, n, o, p, l])
-		translate(x: -4, y: -2)
-		scale(amount: 0.95)
+	
+	func sagittarius(center: Point) {
+		group {
+			let a = node(point: center + <-2, -10>)
+			let b = node(point: center + <-5, -11>)
+			let c = node(point: center + <-1, -12>)
+			line(points: [a, b, c])
+			let d = node(point: center + <-7, -2>)
+			let e = node(point: center + <-4, 1>)
+			let f = node(point: center - <1>)
+			let g = node(point: center + <0, -2>)
+			let h = node(point: center + <1.5, 1>)
+			let i = node(point: center + <3, -1>)
+			line(points: [b, d, e, f, g, i, h, f])
+			let j = node(point: center + <-2, 5>)
+			let k = node(point: center + <-3, 7>)
+			line(points: [f, j, k])
+			let l = node(point: center + <7, 4>)
+			let m = node(point: center + <6, 0>)
+			let n = node(point: center + <7, -3>)
+			let o = node(point: center + <6, -6>)
+			let p = node(point: center + <8, -8>)
+			let q = node(point: center + <9, -3>)
+			line(points:[l, m, n, o, p])
+			line(points:[i, m])
+			line(points:[n, q])
+		}
 	}
-}
-
-func easeInOut(x: Number): Number {
-	return -1 * (cos(3.1415 * x) - 1) / 2
+	
+	func capricorn(center: Point) {
+		group {
+			let a = node(point: center + <-7, 5>)
+			let b = node(point: center + <-4, 4>)
+			let c = node(point: center + <0, 3>)
+			let d = node(point: center + <7, 5>)
+			let e = node(point: center + <8, 7>)
+			let f = node(point: center + <2, -4>)
+			let g = node(point: center + <0, -5>)
+			let h = node(point: center + <0, -5>)
+			let i = node(point: center + <-5, 0>)
+			line(points: [a, b, c, d, f, g, h, i, a])
+			line(points: [e, f])
+			scale(amount: 1.1)
+		}
+	}
+	
+	func aquarius(center: Point) {
+		group {
+			let a = node(point: center + <7, 8>)
+			let b = node(point: center + <2, 4>)
+			let c = node(point: center + <-3, 0>)
+			let d = node(point: center + <-3, -2.5>)
+			let e = node(point: center + <-5, -3>)
+			let f = node(point: center + <-6, -5>)
+			let g = node(point: center + <-2, -9>)
+			let h = node(point: center + <-1, -7>)
+			let i = node(point: center + <2, -7>)
+			let j = node(point: center + <4, -9>)
+			line(points: [a, b, c, d, e, f, g, h, i, j])
+			let k = node(point: center + <2, -2>)
+			let l = node(point: center + <6, -2>)
+			line(points: [c, k, l])
+			translate(x: -2, y: 1)
+			rotate(axis: <z: 1>, angle: 180)
+		}
+	}
+	
+	func pisces(center: Point) {
+		group {
+			let a = node(point: center + <-7, 7>)
+			let b = node(point: center + <-6, 5>)
+			// let c = node(point: center + <-4, 4>)
+			let d = node(point: center + <-2, 3>)
+			let e = node(point: center + <-1, 0>)
+			//let f = node(point: center + <0, -3>)
+			let g = node(point: center + <0.5, -6>)
+			let h = node(point: center + <4, 0>)
+			let i = node(point: center + <6, 1.5>)
+			//let j = node(point: center + <9, 4>)
+			let k = node(point: center + <9, 4>)
+			let l = node(point: center + <11, 5>)
+			let m = node(point: center + <13, 4>)
+			let n = node(point: center + <15, 6>)
+			let o = node(point: center + <15, 8>)
+			let p = node(point: center + <12.5, 7.5>)
+			line(points: [a, b, d, e, g, h, i, k, l, m, n, o, p, l])
+			translate(x: -4, y: -2)
+			scale(amount: 0.95)
+		}
+	}
+	
+	func easeInOut(x: Number): Number {
+		return -1 * (cos(3.1415 * x) - 1) / 2
+	}
 }

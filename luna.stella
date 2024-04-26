@@ -1,48 +1,39 @@
-form {
-	let left = wingit()
-	let right = wingit()
-	let rotMod = sin(time % 5000 / 5000 * 3.1415 * 2) * 0.5 + 0.5
-	let maxAngle = -85
-	rotate(left, center: <0, 0, 0>, angle: rotMod * maxAngle)
-	rotate(right, center: <0, 0, 0>, angle: 180 - rotMod * maxAngle)
-	rotate(left, center: <0, 0, 0>, axis: <1, 0, 0>, angle: -40)
-	rotate(right, center: <0, 0, 0>, axis: <1, 0, 0>, angle: -40)
-	rotate(left, center: <0, 0, 0>, axis: <0, 1, 0>, angle: -45)
-	rotate(right, center: <0, 0, 0>, axis: <0, 1, 0>, angle: -45)
-}
-
-func wingit(): GroupIdentifier {
-	let wingRad = 0.04
-	let wingCol = 1
-	let accentCol = 2
-	let topWingPoints = [<0, 0>, <6, 1>, <8, 0>, <6.5, -2>, <4, -4>, <0, 0>]
-	let bottomWingPoints = [<0, 0>, <1, 0>, <5, -4>, <3.5, -5.35>, <2.4, -6>, <2.75, -8>, <2.5, -8.5>, <2, -9>, <1.5, -6>, <0.2, -4>, <0, 0>]
-	let wings = group {
-		group {
-			line(points: topWingPoints, radius: wingRad, color: wingCol, curve: true)
+constellation Luna {
+	form {
+		let left = wingit()
+		let right = wingit()
+		let rotMod = sin(time % 5000 / 5000 * 3.1415 * 2) * 0.5 + 0.5
+		let maxAngle = -85
+		rotate(left, center: <0, 0, 0>, angle: rotMod * maxAngle)
+		rotate(right, center: <0, 0, 0>, angle: 180 - rotMod * maxAngle)
+		rotate(left, center: <0, 0, 0>, axis: <1, 0, 0>, angle: -40)
+		rotate(right, center: <0, 0, 0>, axis: <1, 0, 0>, angle: -40)
+		rotate(left, center: <0, 0, 0>, axis: <0, 1, 0>, angle: -45)
+		rotate(right, center: <0, 0, 0>, axis: <0, 1, 0>, angle: -45)
+	}
+	
+	func wingit(): GroupIdentifier {
+		let wingRad = 0.04
+		let wingCol = 1
+		let accentCol = 2
+		let topWingPoints = [<0, 0>, <6, 1>, <8, 0>, <6.5, -2>, <4, -4>, <0, 0>]
+		let bottomWingPoints = [<0, 0>, <1, 0>, <5, -4>, <3.5, -5.35>, <2.4, -6>, <2.75, -8>, <2.5, -8.5>, <2, -9>, <1.5, -6>, <0.2, -4>, <0, 0>]
+		let wings = group {
 			group {
-				line(points: drawArc(4.4, -0.5, 0.625, 32, 2, 20), radius: 0.05, color: accentCol)
-				line(points: drawArc(3.8, -0.1, 0.85, 32, 7, 15), radius: 0.05, color: accentCol)
+				line(points: topWingPoints, radius: wingRad, color: wingCol, curve: true)
+				group {
+					default line(radius: 0.05, color: accentCol)
+					circle(<4.4, -0.5>, 0.625)
+					arc(<3.8, -0.1>, 0.85, 0.78, 0.02)
+				}
+			}
+			group {
+				default line(radius: 0.05, color: accentCol)
+				line(points: bottomWingPoints, radius: wingRad, color: wingCol, curve: true)
+				circle(<1.5, -3.5>, 0.5)
+				arc(<1.6, -3.8>, 0.53, 0.12, 0.48)
 			}
 		}
-		group {
-			line(points: bottomWingPoints, radius: wingRad, color: wingCol, curve: true)
-			line(points: drawArc(1.5, -3.5, 0.5, 32, 0, 32), radius: 0.05, color: accentCol, curve: true)
-			line(points: drawArc(1.6, -3.8, 0.53, 32, -7, 4), radius: 0.05, color: accentCol, curve: true)
-		}
+		return wings
 	}
-	return wings
-}
-
-func drawArc(originX: Number, originY: Number, radius: Number, totalSteps: Number, startSteps: Number, endSteps: Number): [Point] {
-	var angle = 0
-	let angleStep = 2 * 3.1415 / totalSteps
-	var points: [Point]
-	for i in startSteps to endSteps {
-		let angle = i * angleStep
-		let x = radius * sin(angle) + originX
-		let y = radius * cos(angle) + originY
-		points.add(<x, y, 0>)
-	}
-	return points
 }

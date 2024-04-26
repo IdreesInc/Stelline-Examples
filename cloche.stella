@@ -1,47 +1,19 @@
-palette("#13003a", "#866ff8", "#e4ebd0", "#bae0ac")
-form {
-	let radius = 10
-	let height = 15
-	follow(center: <0, 0, 0>, vertical: false) {
-		drawHalfCircle([0, height, 0], radius, 32)
-		line(points: [<-1 * radius, 0, 0>, <-1 * radius, height, 0>])
-		line(points: [<radius, 0, 0>, <radius, height, 0>])
+constellation Cloche {
+	palette("#13003a", "#866ff8", "#e4ebd0", "#bae0ac")
+	form {
+		let radius = 10
+		let height = 15
+		follow(center: <0, 0, 0>, vertical: false) {
+			arc(<y: height>, radius, 0 ,0.5)
+			line(points: [<-1 * radius, 0, 0>, <-1 * radius, height, 0>])
+			line(points: [<radius, 0, 0>, <radius, height, 0>])
+		}
+		circle(<>, radius, <y: 1>)
+		circle(<y: -2>, radius, <y: 1>)
+		rotate(center: <0, 0, 0>, axis: <0, 1, 0>, angle: @time % 5000 / 5000 * 360) {
+			node(#abc, point: <x: -3, y: 3>, color: 2)
+			node(#def, point: <x: 5, y: 8>, color: 2)
+			line(points: [#abc, #def], color: 2, curve: true)
+		}
 	}
-	drawFlatCircle([0, 0, 0], radius, 30)
-	drawFlatCircle([0, -2, 0], radius, 30)
-	rotate(center: <0, 0, 0>, axis: <0, 1, 0>, angle: @time % 5000 / 5000 * 360) {
-		node(#abc, point: <x: -3, y: 3>, color: 2)
-		node(#def, point: <x: 5, y: 8>, color: 2)
-		line(points: [#abc, #def], color: 2, curve: true)
-	}
-}
-
-func drawHalfCircle(center: [Number], radius: Number, count: Number, angleOffset: Number = 0, color: Number = 1, connect: Boolean = true): [NodeIdentifier] {
-	let angle = 3.1415 * 2 / count
-	var nodes: [NodeIdentifier]
-	for i in 0 to count / 2 {
-		let x = center[0] + radius * cos(angle * i + angleOffset)
-		let y = center[1] + radius * sin(angle * i + angleOffset)
-		let point = node(point: <x: x, y: y, z: center[2]>, radius: 0.01, color: color)
-		nodes.add(point)
-	}
-	if connect {
-		line(points: nodes, color: color, curve: true)
-	}
-	return nodes
-}
-
-func drawFlatCircle(center: [Number], radius: Number, count: Number, angleOffset: Number = 0, color: Number = 1, connect: Boolean = true): [NodeIdentifier] {
-	let angle = 3.1415 * 2 / count
-	var nodes: [NodeIdentifier]
-	for i in 0 to count + 1 {
-		let x = center[0] + radius * cos(angle * i + angleOffset)
-		let z = center[2] + radius * sin(angle * i + angleOffset)
-		let point = node(point: <x: x, y: center[1], z: z>, radius: 0.01, color: color)
-		nodes.add(point)
-	}
-	if connect {
-		line(points: nodes, color: color, curve: true)
-	}
-	return nodes
 }
